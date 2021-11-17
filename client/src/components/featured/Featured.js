@@ -1,31 +1,53 @@
-import { InfoOutlined, Person, PlayArrow } from '@material-ui/icons';
+import { InfoOutlined, PlayArrow } from '@material-ui/icons';
 import './featured.scss';
 
-const Featured = () => {
+import filmInfo from '../../assets/images/eternalsInfo.png';
+import filmPoster from '../../assets/images/eternalsPoster.jpeg';
+
+const Featured = ({ type }) => {
   return (
     <div className='featured'>
-      <img
-        src='https://i.pinimg.com/564x/28/3f/54/283f54219ac0a3ba499a73fa1b86a16c.jpg'
-        alt=''
-      />
+      {type && (
+        <div className='category'>
+          <span>{type === 'movie' ? 'Movies' : 'Series'}</span>
+          <select name='genre' id='genre'>
+            <option value=''>Genre</option>
+            <option value='adventure'>Adventure</option>
+            <option value='comedy'>Comedy</option>
+            <option value='crime'>Crime</option>
+            <option value='fantasy'>Fantasy</option>
+            <option value='historical'>Historical</option>
+            <option value='horror'>Horror</option>
+            <option value='romance'>Romance</option>
+            <option value='sci-fi'>Sci-fi</option>
+            <option value='thriller'>Thriller</option>
+            <option value='western'>Western</option>
+            <option value='animation'>Animation</option>
+            <option value='drama'>Drama</option>
+            <option value='documentary'>Documentary</option>
+          </select>
+        </div>
+      )}
+
+      <img src={filmPoster} alt='featured' />
       <div className='info'>
-        <Person />
-      </div>
-      <span className='desc'>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque totam
-        pariatur minima modi maiores explicabo facilis itaque! Temporibus vitae,
-        corrupti quia adipisci labore nobis ad optio. Officia libero temporibus
-        saepe?
-      </span>
-      <div className='buttons'>
-        <button className='play'>
-          <PlayArrow />
-          <span>Play</span>
-        </button>
-        <button className='more'>
-          <InfoOutlined />
-          <span>Info</span>
-        </button>
+        <img src={filmInfo} alt='info' />
+        <span className='desc'>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque totam
+          pariatur minima modi maiores explicabo facilis itaque! Temporibus
+          vitae, corrupti quia adipisci labore nobis ad optio. Officia libero
+          temporibus saepe?
+        </span>
+        <div className='buttons'>
+          <button className='play'>
+            <PlayArrow />
+            <span>Play</span>
+          </button>
+          <button className='more'>
+            <InfoOutlined />
+            <span>Info</span>
+          </button>
+        </div>
       </div>
     </div>
   );
