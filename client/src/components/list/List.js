@@ -7,7 +7,7 @@ import { useRef, useState } from 'react';
 import ListItem from '../listItem/ListItem';
 import './list.scss';
 
-const List = () => {
+const List = ({ name }) => {
   const [isMoved, setIsMoved] = useState(false);
   const [slideNumber, setSliderNumber] = useState(0);
 
@@ -29,7 +29,7 @@ const List = () => {
 
   return (
     <div className='list'>
-      <span className='listTitle'>Continue to watch</span>
+      <span className='listTitle'>{name}</span>
       <div className='wrapper'>
         <ArrowBackIosOutlined
           className='sliderArrow left'

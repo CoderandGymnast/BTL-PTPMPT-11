@@ -1,9 +1,4 @@
-import {
-  ArrowDropDown,
-  Search,
-  Notifications,
-  Person,
-} from '@material-ui/icons';
+import { ArrowDropDown, Search, Person } from '@material-ui/icons';
 import { useState } from 'react';
 import './navbar.scss';
 
@@ -23,16 +18,11 @@ const Navbar = () => {
             src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/VTV3_logo_2013_final.svg/672px-VTV3_logo_2013_final.svg.png'
             alt='logo'
           />
-          <span>Homepage</span>
-          <span>Series</span>
-          <span>Movies</span>
-          <span>New and Popular</span>
-          <span>My List</span>
+          <span>Home</span>
+          <span>Films</span>
         </div>
         <div className='right'>
           <Search className='icon' />
-          <span>KID</span>
-          <Notifications className='icon' />
           <Person />
           <div className='profile'>
             <ArrowDropDown className='icon' />
