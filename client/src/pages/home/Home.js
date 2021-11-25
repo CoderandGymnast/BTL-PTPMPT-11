@@ -3,6 +3,7 @@ import Navbar from '../../components/navbar/Navbar';
 import List from '../../components/list/List';
 
 import './home.scss';
+import Footer from '../../components/footer/Footer';
 
 const listName = [
   'Maybe you like it',
@@ -23,6 +24,7 @@ const Home = () => {
       <Navbar />
       <Featured />
       {listName && listName.map((name) => <List name={name} key={name} />)}
+      <Footer />
     </div>
   );
 };

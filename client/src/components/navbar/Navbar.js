@@ -2,6 +2,8 @@ import { ArrowDropDown, Search, Person } from '@material-ui/icons';
 import { useState } from 'react';
 import './navbar.scss';
 
+import logo from '../../assets/images/logo.png';
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -14,10 +16,7 @@ const Navbar = () => {
     <div className={isScrolled ? 'navbar scrolled' : 'navbar'}>
       <div className='container'>
         <div className='left'>
-          <img
-            src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/VTV3_logo_2013_final.svg/672px-VTV3_logo_2013_final.svg.png'
-            alt='logo'
-          />
+          <img src={logo} alt='logo' />
           <span>Home</span>
           <span>Films</span>
         </div>

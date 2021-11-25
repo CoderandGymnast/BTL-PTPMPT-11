@@ -19,11 +19,11 @@ const List = ({ name }) => {
 
     if (direction === 'left' && slideNumber > 0) {
       setSliderNumber(slideNumber - 1);
-      listRef.current.style.transform = `translateX(${230 + distance}px)`;
+      listRef.current.style.transform = `translateX(${245 + distance}px)`;
     }
-    if (direction === 'right' && slideNumber < 3) {
+    if (direction === 'right' && slideNumber < 4) {
       setSliderNumber(slideNumber + 1);
-      listRef.current.style.transform = `translateX(${-230 + distance}px)`;
+      listRef.current.style.transform = `translateX(${-245 + distance}px)`;
     }
   };
 

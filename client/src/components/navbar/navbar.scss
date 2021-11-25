@@ -24,10 +24,14 @@
             img{
                 height: 30px;
                 margin-right: 20px;
+                cursor: pointer;
             }
             span{
                 margin-right: 20px;
                 cursor: pointer;
+                &:hover{
+                    color: rgb(245, 72, 72);
+                }
             }
         }
 
@@ -51,6 +55,9 @@
                 span{
                     padding: 10px;
                     cursor: pointer;
+                    &:hover{
+                        color: rgb(245, 72, 72);
+                    }
                 }
 
                 &:hover{
