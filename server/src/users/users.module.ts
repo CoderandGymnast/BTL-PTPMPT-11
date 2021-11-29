@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
-import { User } from './user.entity';
+import { Film } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User])],
+  imports:[TypeOrmModule.forFeature([Film])],
   controllers: [UsersController],
   providers: [UsersService]
 })
