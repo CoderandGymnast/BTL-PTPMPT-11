@@ -3,6 +3,7 @@ import './featured.scss';
 
 import filmInfo from '../../assets/images/eternalsInfo.png';
 import filmPoster from '../../assets/images/eternalsPoster.jpeg';
+import { Link } from 'react-router-dom';
 
 const Featured = ({ type }) => {
   return (
@@ -35,14 +36,14 @@ const Featured = ({ type }) => {
           temporibus saepe?
         </span>
         <div className='buttons'>
-          <button className='play'>
+          <Link to='/id' className='play'>
             <PlayArrow />
             <span>Play</span>
-          </button>
-          <button className='more'>
+          </Link>
+          <Link to='/id' className='more'>
             <InfoOutlined />
             <span>Info</span>
-          </button>
+          </Link>
         </div>
       </div>
     </div>

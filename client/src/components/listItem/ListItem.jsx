@@ -1,15 +1,22 @@
 import './listItem.scss';
 import movie from '../../assets/images/movie.jpg';
 import { InfoOutlined, PlayArrow } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 
 const ListItem = () => {
   return (
     <div className='listItem'>
-      <img src={movie} alt='movie' />
+      <Link to='/id'>
+        <img src={movie} alt='movie' />
+      </Link>
       <div className='itemInfo'>
         <div className='icons'>
-          <PlayArrow className='icon' />
-          <InfoOutlined className='icon' />
+          <Link to='/id'>
+            <PlayArrow className='icon' />
+          </Link>
+          <Link to='/id'>
+            <InfoOutlined className='icon' />
+          </Link>
         </div>
         <div className='itemInfoTop'>
           <span>2 hours 2 mins</span>

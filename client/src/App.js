@@ -1,8 +1,24 @@
 import './app.scss';
-import Home from './pages/home/Home';
+
+import { Route, BrowserRouter } from 'react-router-dom';
+import Navbar from './components/navbar/Navbar';
+import Routes from './config/Routes';
+import Footer from './components/footer/Footer';
 
 const App = () => {
-  return <Home />;
+  return (
+    <BrowserRouter>
+      <Route
+        render={() => (
+          <>
+            <Navbar />
+            <Routes />
+            <Footer />
+          </>
+        )}
+      />
+    </BrowserRouter>
+  );
 };
 
 export default App;

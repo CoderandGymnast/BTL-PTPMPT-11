@@ -4,31 +4,34 @@ import './footer.scss';
 
 import bg from '../../assets/images/footer-bg.jpg';
 import logo from '../../assets/images/logo.png';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
     <div className='footer' style={{ backgroundImage: `url(${bg})` }}>
       <div className='content'>
         <div className='logo'>
-          <img src={logo} alt='' />
+          <Link to='/'>
+            <img src={logo} alt='' />
+          </Link>
         </div>
         <div className='menus'>
           <div className='menu'>
-            <a href='/'>Home</a>
-            <a href='/'>Contact us</a>
-            <a href='/'>Term of services</a>
-            <a href='/'>About us</a>
+            <Link to='/'>Home</Link>
+            <Link to='/'>Contact us</Link>
+            <Link to='/'>Term of services</Link>
+            <Link to='/'>About us</Link>
           </div>
           <div className='menu'>
-            <a href='/'>Live</a>
-            <a href='/'>FAQ</a>
-            <a href='/'>Premium</a>
-            <a href='/'>Privacy Policy</a>
+            <Link to='/'>Live</Link>
+            <Link to='/'>FAQ</Link>
+            <Link to='/'>Premium</Link>
+            <Link to='/'>Privacy Policy</Link>
           </div>
           <div className='menu'>
-            <a href='/'>You must watch</a>
-            <a href='/'>Recent release</a>
-            <a href='/'>Top IMDP</a>
+            <Link to='/'>You must watch</Link>
+            <Link to='/'>Recent release</Link>
+            <Link to='/'>Top IMDP</Link>
           </div>
         </div>
       </div>

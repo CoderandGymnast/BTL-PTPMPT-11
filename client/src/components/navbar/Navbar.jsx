@@ -3,6 +3,7 @@ import { useState } from 'react';
 import './navbar.scss';
 
 import logo from '../../assets/images/logo.png';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -16,9 +17,11 @@ const Navbar = () => {
     <div className={isScrolled ? 'navbar scrolled' : 'navbar'}>
       <div className='container'>
         <div className='left'>
-          <img src={logo} alt='logo' />
-          <span>Home</span>
-          <span>Films</span>
+          <Link to='/'>
+            <img src={logo} alt='logo' />
+          </Link>
+          <Link to='/'>Home</Link>
+          <Link to='/'>Films</Link>
         </div>
         <div className='right'>
           <Search className='icon' />

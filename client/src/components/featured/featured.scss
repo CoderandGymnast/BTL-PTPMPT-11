@@ -48,7 +48,8 @@
         .buttons{
             display: flex;
         
-            button{
+            a{
+                text-decoration: none;
                 padding: 10px 20px;
                 border: none;
                 border-radius: 5px;
@@ -63,11 +64,19 @@
                 &.play{
                     background-color: white;
                     color: var(--main-color);
+                    &:hover{
+                        background-color: gray;
+                        opacity: 0.9;
+                        color: white;
+                    }
                 }
 
                 &.more{
                     background-color: gray;
                     color: white;
+                    &:hover{
+                        opacity: 0.9;
+                    }
                 }
 
                 span {
