@@ -1,0 +1,144 @@
+.detail{
+    position: relative;
+    background-color: var(--main-color);
+    padding-bottom: 80px;
+    color: white;
+
+    .back{
+        position: absolute;
+        top: 80px;
+        left: 50px;
+        z-index: 2;
+        cursor: pointer;
+
+        &__item{
+            font-size: 2.4rem;
+            font-weight: 900;
+
+            &:hover{
+                color: rgb(245, 72, 72);
+            }
+        }
+    }
+
+    .banner{
+        height: 50vh;
+        position: relative;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    
+        &::before{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0, 0.6);
+        }
+
+        &::after{
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-image: linear-gradient(to top, #0f0f0f, rgba(0,0,0,0));
+        }
+    }
+
+    .movie-content{
+        max-width: 1200px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        margin: -200px auto 2rem auto ;
+        position: relative;
+        padding: 0 50px;
+
+        .poster{
+            flex: 1;
+            &__img{
+                background-position: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+                border-radius: 30px;
+                padding-top: 165%;
+            }
+        }
+
+        .info{
+            width: 70%;
+            padding-left: 2rem;
+            position: relative;
+
+            & > *{
+                margin-bottom: 32px;
+            }
+
+            .title {
+                font-size: 4rem;
+                line-height: 1;
+            }
+
+            .genres {
+                & > * ~ * {
+                    margin-left: 8px;
+                }
+
+                &__item{
+                    padding: .5rem 1.5rem;
+                    border: 2px solid white;
+                    border-radius: 3rem;
+                    font-size: .8rem;
+                    font-weight: 600;
+                    background-color: var(--main-color);
+                }
+            }
+
+            .overview {
+                line-height: 1.4rem;
+            }
+        }
+    }
+
+    .cast{
+        &__header{
+            margin-bottom: 20px;
+        }
+    }
+
+    .videoList {
+        padding: 0 50px;
+    }
+}
+
+.casts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 10px;
+
+    &__item{
+        &__img{
+            padding-top: 140px;
+            background-position: top;
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin-bottom: 1rem;
+        }
+
+        &__name {
+            font-size: 1rem;
+        }
+    }
+}
+
+.video {
+    margin-bottom: 1.5rem;
+
+    &__title{
+        margin-bottom: 1.5rem;
+    }
+}
