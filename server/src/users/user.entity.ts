@@ -10,4 +10,14 @@ export class Film{
     @ApiProperty()
     @Column()
     description:string;
+    @ApiProperty()
+    @Column()
+    category:string;
+    @ApiProperty()
+    @Column()
+    cast:string;
+    @ApiProperty()
+    @Column()
+    thumbnail:string;
+
 }
