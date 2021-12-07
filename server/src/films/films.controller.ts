@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { Crud, CrudController } from '@nestjsx/crud';
 import { get, request } from 'http';
-import { Film } from './user.entity';
-import { UsersService } from './users.service';
+import { Film } from './film.entity';
+import { FilmsService } from './films.service';
 @Crud(
     {
         model:{
@@ -11,6 +11,6 @@ import { UsersService } from './users.service';
     }
 )
 @Controller('films')
-export class UsersController implements CrudController<Film>{
-    constructor(public service: UsersService){}
+export class FilmsController implements CrudController<Film>{
+    constructor(public service: FilmsService){}
 }
