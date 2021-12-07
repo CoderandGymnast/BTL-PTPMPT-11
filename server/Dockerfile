@@ -1,8 +1,5 @@
-FROM node:12
-WORKDIR /vsean/src/app
-COPY package.json ./
-RUN npm install 
-COPY . .
-RUN npm run build
-EXPOSE 3000
-CMD ["npm","dist/main"]
+FROM node:16-alpine
+
+WORKDIR /srv/app
+
+CMD npm run start:dev
