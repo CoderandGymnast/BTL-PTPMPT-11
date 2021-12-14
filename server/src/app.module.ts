@@ -12,7 +12,7 @@ import { MoviesModule } from './movies/movies.module';
       password: '3112',
       database: 'movies',
       entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: false,
     }),
     MoviesModule,
   ],

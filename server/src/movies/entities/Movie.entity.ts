@@ -5,7 +5,6 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Cast } from './Cast.entity';
 import { Genre } from './Genre.entity';
 
 @Entity()
@@ -16,41 +15,32 @@ export class Movie {
   })
   id: number;
 
-  @Column({
-    nullable: false,
-    default: '',
-  })
+  @Column()
   title: string;
 
   @Column({
-    nullable: false,
-    default: '',
+    type: 'longtext',
   })
   description: string;
 
-  @Column({
-    name: 'poster-img',
-    nullable: false,
-    default: '',
-  })
-  posterUrl: string;
+  @Column()
+  runtime: number;
 
   @Column({
-    name: 'thumbnail-img',
-    nullable: false,
-    default: '',
+    name: 'poster-path',
   })
-  thumbnailUrl: string;
+  posterPath: string;
+
+  @Column({
+    name: 'backdrop_path',
+  })
+  backdropPath: string;
 
   @ManyToMany(() => Genre, (genre) => genre.movies)
-  @JoinTable()
+  @JoinTable({
+    name: 'movies_genres',
+  })
   genres: Genre[];
-
-  @ManyToMany(() => Cast, (cast) => cast.movies)
-  @JoinTable()
-  casts: Cast[];
-
-  //   time: string;
 
   //   limit: string;
 }

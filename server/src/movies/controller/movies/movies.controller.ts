@@ -33,15 +33,14 @@ export class MoviesController {
   @Get('genres/:genre')
   @ApiResponse({ status: 200, description: 'Find movies by genre' })
   async GetByGenre(@Param('genre') genre: string) {
-    const ge = await this.moviesService.getMoviesByGenre(genre);
-    console.log(ge);
-    return ge;
+    return await this.moviesService.getMoviesByGenre(genre);
   }
 
   @Post('create')
   @UsePipes(ValidationPipe)
   createMovie(@Body() createMovieDto: CreateMovieDto) {
-    // return this.moviesService.createMovie(createMovieDto);
-    return createMovieDto;
+    return this.moviesService.createMovie(createMovieDto);
+    // console.log(createMovieDto);
+    // return createMovieDto;
   }
 }

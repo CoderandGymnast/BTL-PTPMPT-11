@@ -4,10 +4,6 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateMovieDto {
   @ApiProperty()
   @IsNotEmpty()
-  genres: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
   title: string;
 
   @ApiProperty()
@@ -15,14 +11,17 @@ export class CreateMovieDto {
   description: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  casts: string;
+  runtime: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  posterUrl: string;
+  posterPath: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  thumbnailUrl: string;
+  backdropPath: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  genres: [];
 }
