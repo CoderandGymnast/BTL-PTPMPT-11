@@ -1,6 +1,7 @@
-import { ArrowDropDown, Search, Person } from '@material-ui/icons';
+import { ArrowDropDown, Person } from '@material-ui/icons';
 import { useState } from 'react';
 import './navbar.scss';
+import Search from '../search/Search';
 
 import logo from '../../assets/images/logo.png';
 import { Link } from 'react-router-dom';
@@ -24,7 +25,7 @@ const Navbar = () => {
           <Link to='/'>Films</Link>
         </div>
         <div className='right'>
-          <Search className='icon' />
+          <Search />
           <Person />
           <div className='profile'>
             <ArrowDropDown className='icon' />

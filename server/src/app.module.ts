@@ -6,13 +6,18 @@ import { MoviesModule } from './movies/movies.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
+      port: 3307,
+      // for local
+      // host: 'localhost',
+      // username: 'root',
+      // password: '3112',
+      // for docker
+      host: 'db',
       username: 'root',
-      password: '3112',
+      password: 'root123',
       database: 'movies',
       entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: false,
+      synchronize: true,
     }),
     MoviesModule,
   ],

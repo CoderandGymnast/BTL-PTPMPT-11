@@ -3,9 +3,12 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Cast } from './Cast.entity';
 import { Genre } from './Genre.entity';
+import { Video } from './Video.entity';
 
 @Entity()
 export class Movie {
@@ -27,7 +30,7 @@ export class Movie {
   runtime: number;
 
   @Column({
-    name: 'poster-path',
+    name: 'poster_path',
   })
   posterPath: string;
 
@@ -36,11 +39,15 @@ export class Movie {
   })
   backdropPath: string;
 
+  @OneToMany(() => Video, (video) => video.movie)
+  videos: Video[];
+
+  @OneToMany(() => Cast, (cast) => cast.movie)
+  casts: Cast[];
+
   @ManyToMany(() => Genre, (genre) => genre.movies)
   @JoinTable({
     name: 'movies_genres',
   })
   genres: Genre[];
-
-  //   limit: string;
 }

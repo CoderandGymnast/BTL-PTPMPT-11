@@ -1,11 +1,28 @@
 import { InfoOutlined, PlayArrow } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 import './featured.scss';
 
 import filmInfo from '../../assets/images/eternalsInfo.png';
 import filmPoster from '../../assets/images/eternalsPoster.jpeg';
-import { Link } from 'react-router-dom';
+import movieApi from '../../api/movieApi';
+import getData from '../../api/handleApi/getData';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const Featured = ({ type }) => {
+  const id = 1;
+  const [movie, setMovie] = useState({});
+
+  useEffect(() => {
+    const callback = (res) => {
+      if (res.status === 200) {
+        setMovie(res.data);
+      }
+    };
+
+    getData(movieApi.getById, callback, id);
+  }, [id]);
+
   return (
     <div className='featured'>
       {type && (
@@ -29,18 +46,13 @@ const Featured = ({ type }) => {
       <img src={filmPoster} alt='featured' />
       <div className='info'>
         <img src={filmInfo} alt='info' />
-        <span className='desc'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque totam
-          pariatur minima modi maiores explicabo facilis itaque! Temporibus
-          vitae, corrupti quia adipisci labore nobis ad optio. Officia libero
-          temporibus saepe?
-        </span>
+        <span className='desc'>{movie && movie.description}</span>
         <div className='buttons'>
-          <Link to='/id' className='play'>
+          <Link to={`${id}`} className='play'>
             <PlayArrow />
             <span>Play</span>
           </Link>
-          <Link to='/id' className='more'>
+          <Link to={`${id}`} className='more'>
             <InfoOutlined />
             <span>Info</span>
           </Link>

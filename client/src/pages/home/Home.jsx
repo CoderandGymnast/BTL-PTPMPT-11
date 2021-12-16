@@ -1,26 +1,31 @@
+import { useEffect } from 'react';
+import { useState } from 'react';
 import Featured from '../../components/featured/Featured';
 import List from '../../components/list/List';
 
+import getData from '../../api/handleApi/getData';
+import genreApi from '../../api/genreApi';
+
 import './home.scss';
 
-const listName = [
-  'Maybe you like it',
-  'Adventure',
-  'Comedy',
-  'TV show',
-  'Fantasy',
-  'Historical',
-  'Horror',
-  'Romance',
-  'Drama',
-  'Documentary',
-];
-
 const Home = () => {
+  const [listGenres, setListGenres] = useState([]);
+
+  useEffect(() => {
+    const callback = (res) => {
+      if (res.status === 200) {
+        setListGenres(res.data);
+      }
+    };
+
+    getData(genreApi.getAll, callback);
+  }, []);
+
   return (
     <div className='home'>
       <Featured />
-      {listName && listName.map((name) => <List name={name} key={name} />)}
+      {listGenres &&
+        listGenres.map(({ id, name }) => <List name={name} key={id} />)}
     </div>
   );
 };

@@ -1,17 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 
-const VideoList = () => {
+const VideoList = ({ videos }) => {
   return (
     <>
-      <Video id='Pj0wz7zu3Ms' />
-      <Video id='T6l3mM7AWew' />
-      <Video id='dQw4w9WgXcQ' />
-      <Video id='46pra8NwhzU' />
+      {videos &&
+        videos.map((video) => (
+          <Video key={video.id} videoPath={video.videoPath} name={video.name} />
+        ))}
     </>
   );
 };
 
-const Video = ({ id }) => {
+const Video = ({ videoPath, name }) => {
   const iframeRef = useRef(null);
 
   useEffect(() => {
@@ -22,10 +22,10 @@ const Video = ({ id }) => {
   return (
     <div className='video'>
       <div className='video__title'>
-        <h2>Official Teaser Trailer</h2>
+        <h2>{name}</h2>
       </div>
       <iframe
-        src={`https://www.youtube.com/embed/${id}`}
+        src={videoPath}
         ref={iframeRef}
         width='100%'
         title='video'

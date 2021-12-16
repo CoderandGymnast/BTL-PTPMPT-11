@@ -1,0 +1,8 @@
+node_modules
+dist
+Dockerfile
+mysql-data
+.git
+.gitignore
+.dockerignore
+.env

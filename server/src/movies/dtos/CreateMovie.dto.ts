@@ -23,5 +23,13 @@ export class CreateMovieDto {
 
   @ApiProperty()
   @IsNotEmpty()
+  casts: [];
+
+  @ApiProperty()
+  @IsNotEmpty()
+  videos: [];
+
+  @ApiProperty()
+  @IsNotEmpty()
   genres: [];
 }

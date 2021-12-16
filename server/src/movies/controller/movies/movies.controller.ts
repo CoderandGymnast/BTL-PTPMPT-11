@@ -1,15 +1,18 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   Post,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateMovieDto } from 'src/movies/dtos/CreateMovie.dto';
+import { Genre } from 'src/movies/entities/Genre.entity';
 import { Movie } from 'src/movies/entities/Movie.entity';
 import { MoviesService } from 'src/movies/services/movies/movies.service';
 
@@ -24,23 +27,40 @@ export class MoviesController {
     return await this.moviesService.getMovies();
   }
 
+  @Get('genres/all')
+  @ApiResponse({ status: 200, description: 'Find all genres' })
+  async getGenres(): Promise<Genre[]> {
+    return await this.moviesService.getGenres();
+  }
+
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Find movie by Id' })
   async GetById(@Param('id', ParseIntPipe) id: number): Promise<Movie> {
     return await this.moviesService.getMovieById(id);
   }
 
+  @Get('search/all')
+  @ApiResponse({ status: 200, description: 'Find movies by Title' })
+  async GetByTitle(@Query('title') title: string) {
+    return this.moviesService.getMovieByTitle(title);
+  }
+
   @Get('genres/:genre')
   @ApiResponse({ status: 200, description: 'Find movies by genre' })
-  async GetByGenre(@Param('genre') genre: string) {
+  async GetByGenre(@Param('genre') genre: string): Promise<Movie[]> {
     return await this.moviesService.getMoviesByGenre(genre);
   }
 
   @Post('create')
+  @ApiResponse({ status: 200, description: 'Create a movie' })
   @UsePipes(ValidationPipe)
   createMovie(@Body() createMovieDto: CreateMovieDto) {
     return this.moviesService.createMovie(createMovieDto);
-    // console.log(createMovieDto);
-    // return createMovieDto;
+  }
+
+  @Delete(':id')
+  @ApiResponse({ status: 200, description: 'Delete a movie by id' })
+  async deleteMovie(@Param('id', ParseIntPipe) id: number) {
+    return await this.moviesService.deleteMovie(id);
   }
 }
