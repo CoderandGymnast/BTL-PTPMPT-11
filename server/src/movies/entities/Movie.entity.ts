@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Cast } from './Cast.entity';
 import { Genre } from './Genre.entity';
+import { Rating } from './Rating.entity';
 import { Video } from './Video.entity';
 
 @Entity()
@@ -50,4 +51,7 @@ export class Movie {
     name: 'movies_genres',
   })
   genres: Genre[];
+
+  @OneToMany(() => Rating, (rating) => rating.movie)
+  public ratings: Rating[];
 }

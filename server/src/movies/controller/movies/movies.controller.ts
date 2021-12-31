@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,11 +8,16 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Request,
+  UnauthorizedException,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateMovieDto } from 'src/movies/dtos/CreateMovie.dto';
+import { RateMovieDto } from 'src/movies/dtos/RateMovie.dto';
 import { Genre } from 'src/movies/entities/Genre.entity';
 import { Movie } from 'src/movies/entities/Movie.entity';
 import { MoviesService } from 'src/movies/services/movies/movies.service';
@@ -56,6 +62,35 @@ export class MoviesController {
   @UsePipes(ValidationPipe)
   createMovie(@Body() createMovieDto: CreateMovieDto) {
     return this.moviesService.createMovie(createMovieDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('rating/:id')
+  async getRating(
+    @Param('id', ParseIntPipe) movieId: number,
+    @Request() req: any,
+  ) {
+    const rating = await this.moviesService.getRatingMovie(movieId, req.user);
+
+    if (!rating) throw new BadRequestException();
+
+    return rating;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('rating')
+  async setRatingMovie(
+    @Body() rateMovieDto: RateMovieDto,
+    @Request() req: any,
+  ) {
+    const newRating = await this.moviesService.setRatingMovie(
+      rateMovieDto,
+      req.user,
+    );
+
+    if (!newRating) throw new UnauthorizedException();
+
+    return { rating: newRating.rating };
   }
 
   @Delete(':id')

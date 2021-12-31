@@ -12,8 +12,18 @@ const movieApi = {
   },
 
   getByName: async (name) => {
-    const url = `http://localhost:5000/api/movies/search/all?title=${name}`;
+    const url = `movies/search/all?title=${name}`;
     return await axiosClient.get(url);
+  },
+
+  getRatingByMovieId: async (id) => {
+    const url = `movies/rating/${id}`;
+    return await axiosClient.get(url);
+  },
+
+  setRatingMovie: async (data) => {
+    const url = `movies/rating`;
+    return await axiosClient.post(url, data);
   },
 };
 

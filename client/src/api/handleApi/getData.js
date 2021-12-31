@@ -3,7 +3,6 @@ const fetchData = async (apiFunction, callback, params = {}) => {
     const response = await apiFunction(params);
     callback(response);
   } catch (error) {
-    console.log('faled fetch : ', error);
     callback(error);
   }
 };

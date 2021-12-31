@@ -40,6 +40,12 @@
         .right{
             display: flex;
             align-items: center;
+
+            .name{
+                margin-right: 8px;
+                font-size: 18px;
+                font-weight: 500;
+            }
             
             .icon{
                 margin: 0px 15px;

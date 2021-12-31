@@ -1,33 +1,51 @@
-import {
-  ArrowBackIosOutlined,
-  ArrowForwardIosOutlined,
-} from '@material-ui/icons';
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import Slider from 'react-slick';
 import genreApi from '../../api/genreApi';
 import getData from '../../api/handleApi/getData';
 
-import ListItem from '../listItem/ListItem';
 import './list.scss';
+import ListItem from '../listItem/ListItem';
 
 const List = ({ name }) => {
-  const [isMoved, setIsMoved] = useState(false);
-  const [slideNumber, setSliderNumber] = useState(0);
   const [movies, setMovies] = useState([]);
 
-  const listRef = useRef();
-
-  const handleClick = (direction, max = 10) => {
-    setIsMoved(true);
-    let distance = listRef.current.getBoundingClientRect().x - 50;
-
-    if (direction === 'left' && slideNumber > 0) {
-      setSliderNumber(slideNumber - 1);
-      listRef.current.style.transform = `translateX(${245 + distance}px)`;
-    }
-    if (direction === 'right' && slideNumber < max - 7) {
-      setSliderNumber(slideNumber + 1);
-      listRef.current.style.transform = `translateX(${-245 + distance}px)`;
-    }
+  const settings = {
+    speed: 500,
+    slidesToShow: 7.4,
+    slidesToScroll: 6,
+    dots: false,
+    infinite: false,
+    lazyload: true,
+    responsive: [
+      {
+        breakpoint: 1700,
+        settings: {
+          slidesToShow: 6.4,
+          slidesToScroll: 5,
+        },
+      },
+      {
+        breakpoint: 1400,
+        settings: {
+          slidesToShow: 5.4,
+          slidesToScroll: 4,
+        },
+      },
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 3,
+        },
+      },
+      {
+        breakpoint: 800,
+        settings: {
+          slidesToShow: 2.5,
+          slidesToScroll: 2,
+        },
+      },
+    ],
   };
 
   useEffect(() => {
@@ -44,23 +62,13 @@ const List = ({ name }) => {
     <div className='list'>
       <span className='listTitle'>{name}</span>
       <div className='wrapper'>
-        <ArrowBackIosOutlined
-          className='sliderArrow left'
-          onClick={() => handleClick('left')}
-          style={{ display: !isMoved && 'none' }}
-        />
-        <div className='container' ref={listRef}>
+        <Slider {...settings} className='container'>
           {movies &&
-            movies
-              // .slice(0, 10)
-              .map((movie) => (
-                <ListItem key={movie.id} movie={movie} name={name} />
-              ))}
-        </div>
-        <ArrowForwardIosOutlined
-          className='sliderArrow right'
-          onClick={movies ? () => handleClick('right', movies.length) : null}
-        />
+            movies.map((movie) => (
+              <ListItem key={movie.id} movie={movie} name={name} />
+            ))}
+          <div className='lassItem'></div>
+        </Slider>
       </div>
     </div>
   );

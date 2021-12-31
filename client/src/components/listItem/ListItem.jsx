@@ -18,8 +18,8 @@ const ListItem = ({ movie, name }) => {
     <div className='listItem'>
       <Link to={`${movie.id}`}>
         <img
-          src={movie.backdropPath}
-          // onError={() => console.log(movie.id)} to check broken img from database
+          src={movie.backdropPath.replace('original', 'w400')}
+          onError={() => console.log(movie.id)} //to check broken img from database
           alt='movie img not found'
         />
       </Link>

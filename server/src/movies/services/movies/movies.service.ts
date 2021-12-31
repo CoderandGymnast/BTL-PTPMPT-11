@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateMovieDto } from 'src/movies/dtos/CreateMovie.dto';
+import { RateMovieDto } from 'src/movies/dtos/RateMovie.dto';
 import { Cast } from 'src/movies/entities/Cast.entity';
 import { Genre } from 'src/movies/entities/Genre.entity';
 import { Movie } from 'src/movies/entities/Movie.entity';
+import { Rating } from 'src/movies/entities/Rating.entity';
 import { Video } from 'src/movies/entities/Video.entity';
+import { User } from 'src/users/entities/User.entity';
 import { getConnection, Like, Repository } from 'typeorm';
 
 @Injectable()
@@ -18,6 +21,10 @@ export class MoviesService {
     private readonly castRepository: Repository<Cast>,
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Rating)
+    private readonly ratingRepository: Repository<Rating>,
   ) {}
 
   async getMovies(): Promise<Movie[]> {
@@ -133,6 +140,47 @@ export class MoviesService {
     }
 
     return 'done';
+  }
+
+  async getRatingMovie(movieId: number, user: any) {
+    const { userId } = user;
+
+    const checkMovie = await this.movieRepository.findOne({ id: movieId });
+    if (!checkMovie) return null;
+
+    const checkUser = await this.userRepository.findOne({ id: userId });
+    if (!checkUser) return null;
+
+    const checkRating = await this.ratingRepository.findOne({
+      movie: checkMovie,
+      user: checkUser,
+    });
+
+    if (!checkRating) return null;
+
+    return checkRating;
+  }
+
+  async setRatingMovie(rateMovieDto: RateMovieDto, user: any) {
+    const { movie: movieId, rating } = rateMovieDto;
+    const { userId } = user;
+
+    const checkMovie = await this.movieRepository.findOne({ id: movieId });
+    if (!checkMovie) return null;
+
+    const checkUser = await this.userRepository.findOne({ id: userId });
+    if (!checkUser) return null;
+
+    const newRating = await this.ratingRepository.create({
+      rating,
+    });
+
+    newRating.movie = checkMovie;
+    newRating.user = checkUser;
+
+    await this.ratingRepository.save(newRating);
+
+    return newRating;
   }
 
   async deleteMovie(id: number) {

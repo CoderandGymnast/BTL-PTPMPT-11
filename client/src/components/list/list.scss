@@ -11,39 +11,43 @@
 
     .wrapper{
         position: relative;
-        &:hover{
-            .sliderArrow {
-                display: block;
+        .slick-arrow{
+            width: 30px;
+            height: 100%;
+            color: white;
+            background-color: rgba(22, 22, 22, 0.5);
+
+            z-index: 1;
+            &::before{
+                opacity: 0.1;
+            }
+
+            &:hover{
+                background-color: rgba(255, 255, 255, 0.3);
+
+                &::before{
+                    opacity: 1;
+                }
             }
         }
-        .sliderArrow{
-            width: 50px;
-            height: 100%;
-            background-color: rgba(22, 22, 22, 0.5);
-            color: white;
-            position: absolute;
-            z-index: 9;
-            top: 0;
-            bottom: 0;
-            margin: auto;
-            cursor: pointer;
-            display: none;
+        .slick-prev{
+            left: -50px;
+        }
 
-            &.left{
-                left: 0;
-            }
+        .slick-next{
+            right: 0px;
+        }
 
-            &.right{
-                right: 0;
-            }
+        .slick-disabled{
+            display: none !important;
         }
 
         .container{
             margin-left: 50px;
             margin-top: 20px;
-            display: flex;
-            width: max-content;
-            transition: all 0.5s ease;
+            .slick-list {
+                overflow: visible !important;
+            }
         }
     }
 }

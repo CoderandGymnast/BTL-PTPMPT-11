@@ -67,8 +67,8 @@ const addOneMovie = async (id) => {
 
 const handleData = async (data) => {
   let count = 1;
-  await addOneMovie(524434);
-  const newArr = data.slice(1000, 1015);
+  // await addOneMovie(524434);
+  const newArr = data.slice(50, 100);
   for (const a of newArr) {
     try {
       const { data } = await axios.get(
@@ -84,6 +84,11 @@ const handleData = async (data) => {
         credits,
         videos,
       } = data;
+      console.log(backdrop_path);
+      console.log(poster_path);
+      if (poster_path == null || backdrop_path == null) {
+        throw new Error('image is empty');
+      }
       const { cast } = credits;
       const { results } = videos;
 

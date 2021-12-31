@@ -1,13 +1,13 @@
 import { useHistory, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import ArrowBack from '@material-ui/icons/ArrowBack';
-
 import './detail.scss';
 
 import getData from '../../api/handleApi/getData';
 import CastList from './CastList';
 import VideoList from './VideoList';
 import movieApi from '../../api/movieApi';
+import Rating from './Rating';
 
 const Detail = () => {
   const [movie, setMovie] = useState({});
@@ -47,6 +47,7 @@ const Detail = () => {
           </div>
           <div className='info'>
             <h1 className='title'>{movie.title}</h1>
+            {movie.id ? <Rating id={movie.id} /> : ''}
             <div className='genres'>
               {genres &&
                 genres.map((genre) => (

@@ -1,25 +1,28 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MoviesModule } from './movies/movies.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
       port: 3306,
-      // for local
-      // host: 'localhost',
-      // username: 'root',
-      // password: '3112',
-      // for docker
-      host: 'database',
       username: 'root',
-      password: 'root123',
+      // for local
+      host: 'localhost',
+      password: '3112',
+      // for docker
+      // host: 'database',
+      // password: 'root123',
       database: 'movies',
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     MoviesModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
