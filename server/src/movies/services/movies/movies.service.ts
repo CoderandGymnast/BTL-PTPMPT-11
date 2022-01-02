@@ -9,6 +9,13 @@ import { Rating } from 'src/movies/entities/Rating.entity';
 import { Video } from 'src/movies/entities/Video.entity';
 import { User } from 'src/users/entities/User.entity';
 import { getConnection, Like, Repository } from 'typeorm';
+import axios from 'axios';
+
+const randomList = (length, List) => {
+  for (let i = 0; i < length; i++) {
+    List.push(Math.floor(Math.random() * length) + 1);
+  }
+};
 
 @Injectable()
 export class MoviesService {
@@ -27,20 +34,51 @@ export class MoviesService {
     private readonly ratingRepository: Repository<Rating>,
   ) {}
 
+  listMovie = [];
+
   async getMovies(): Promise<Movie[]> {
     return await this.movieRepository.find();
   }
 
-  async getGenres(): Promise<Genre[]> {
+  async getGenres(user: any): Promise<Genre[]> {
+    const { userId } = user;
+    const numMovie = 100;
+    this.listMovie = [];
+
+    try {
+      const { data } = await axios.get(
+        `http://localhost:5000/get_recommendations?user_id=${userId}&num_movies=${numMovie}`,
+      );
+      this.listMovie = data;
+      console.log(data);
+    } catch (error) {
+      console.error('error');
+    }
     return await this.genreRepository.find();
   }
 
-  async getMovieById(id: number): Promise<Movie> {
-    const Movie = await this.movieRepository.findOne(
-      { id },
-      { relations: ['genres', 'casts', 'videos'] },
-    );
-    if (!Movie) return null;
+  async getMovieById(id: number, user: any) {
+    const { userId } = user;
+    let Movie = await this.movieRepository
+      .createQueryBuilder('movie')
+      .leftJoinAndSelect('movie.videos', 'video')
+      .leftJoinAndSelect('movie.casts', 'cast')
+      .leftJoinAndSelect('movie.genres', 'genre')
+      .leftJoinAndSelect('movie.ratings', 'rating')
+      .leftJoin('rating.user', 'user')
+      .where('movie.id = :id', { id })
+      .andWhere('user.id = :userId', { userId })
+      .getOne();
+
+    if (!Movie) {
+      Movie = await this.movieRepository.findOne(
+        { id },
+        { relations: ['genres', 'casts', 'videos'] },
+      );
+
+      if (!Movie) return null;
+    }
+
     return Movie;
   }
 
@@ -66,10 +104,21 @@ export class MoviesService {
       .createQueryBuilder('movie')
       .leftJoinAndSelect('movie.genres', 'genre')
       .where('genre.name = :genre', { genre })
-      .take(30)
+      // .take(30)
       .getMany();
 
     if (!movies) return null;
+
+    const newList = [];
+
+    if (this.listMovie.length > 0) {
+      for (const id of this.listMovie) {
+        const findMovie = movies.find((movie) => movie.id == id);
+
+        if (findMovie) newList.push(findMovie);
+      }
+      return newList;
+    }
 
     return movies;
   }
@@ -140,25 +189,6 @@ export class MoviesService {
     }
 
     return 'done';
-  }
-
-  async getRatingMovie(movieId: number, user: any) {
-    const { userId } = user;
-
-    const checkMovie = await this.movieRepository.findOne({ id: movieId });
-    if (!checkMovie) return null;
-
-    const checkUser = await this.userRepository.findOne({ id: userId });
-    if (!checkUser) return null;
-
-    const checkRating = await this.ratingRepository.findOne({
-      movie: checkMovie,
-      user: checkUser,
-    });
-
-    if (!checkRating) return null;
-
-    return checkRating;
   }
 
   async setRatingMovie(rateMovieDto: RateMovieDto, user: any) {

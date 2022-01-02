@@ -1,9 +1,8 @@
 import { Rating as RatingMU } from '@material-ui/lab';
 import StarIcon from '@material-ui/icons/Star';
 import { withStyles } from '@material-ui/styles';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import movieApi from '../../api/movieApi';
-import getData from '../../api/handleApi/getData';
 
 const StyledRating = withStyles({
   iconEmpty: {
@@ -12,17 +11,8 @@ const StyledRating = withStyles({
   },
 })(RatingMU);
 
-const Rating = ({ id }) => {
-  const [star, setStar] = useState(0);
-
-  useEffect(() => {
-    const callback = (res) => {
-      if (res.status === 200) {
-        setStar(res.data.rating);
-      }
-    };
-    getData(movieApi.getRatingByMovieId, callback, id);
-  }, []);
+const Rating = ({ id, rating }) => {
+  const [star, setStar] = useState(rating);
 
   const handleChange = async (e, value) => {
     try {

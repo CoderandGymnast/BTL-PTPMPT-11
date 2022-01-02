@@ -47,7 +47,14 @@ const Detail = () => {
           </div>
           <div className='info'>
             <h1 className='title'>{movie.title}</h1>
-            {movie.id ? <Rating id={movie.id} /> : ''}
+            {movie.id ? (
+              <Rating
+                id={movie.id}
+                rating={movie.ratings ? movie.ratings[0].rating : 0}
+              />
+            ) : (
+              ''
+            )}
             <div className='genres'>
               {genres &&
                 genres.map((genre) => (

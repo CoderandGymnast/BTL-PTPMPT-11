@@ -33,16 +33,18 @@ export class MoviesController {
     return await this.moviesService.getMovies();
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('genres/all')
   @ApiResponse({ status: 200, description: 'Find all genres' })
-  async getGenres(): Promise<Genre[]> {
-    return await this.moviesService.getGenres();
+  async getGenres(@Request() req: any): Promise<Genre[]> {
+    return await this.moviesService.getGenres(req.user);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Find movie by Id' })
-  async GetById(@Param('id', ParseIntPipe) id: number): Promise<Movie> {
-    return await this.moviesService.getMovieById(id);
+  async GetById(@Param('id', ParseIntPipe) id: number, @Request() req: any) {
+    return await this.moviesService.getMovieById(id, req.user);
   }
 
   @Get('search/all')
@@ -62,19 +64,6 @@ export class MoviesController {
   @UsePipes(ValidationPipe)
   createMovie(@Body() createMovieDto: CreateMovieDto) {
     return this.moviesService.createMovie(createMovieDto);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('rating/:id')
-  async getRating(
-    @Param('id', ParseIntPipe) movieId: number,
-    @Request() req: any,
-  ) {
-    const rating = await this.moviesService.getRatingMovie(movieId, req.user);
-
-    if (!rating) throw new BadRequestException();
-
-    return rating;
   }
 
   @UseGuards(AuthGuard('jwt'))

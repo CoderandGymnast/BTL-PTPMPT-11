@@ -9,6 +9,7 @@ import Home from './pages/home/Home';
 import Detail from './pages/detail/Detail';
 import { useContext } from 'react';
 import { AuthContext } from './authContext/AuthContext';
+import Admin from './pages/admin/Admin';
 
 const App = () => {
   const { token } = useContext(AuthContext);
@@ -20,6 +21,9 @@ const App = () => {
         </Route>
         <Route exact path='/login'>
           {!token ? <Login /> : <Redirect to='/' />}
+        </Route>
+        <Route exact path='/admin'>
+          <Admin />
         </Route>
         <Route path='/'>
           {token ? (

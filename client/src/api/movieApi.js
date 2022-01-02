@@ -16,11 +16,6 @@ const movieApi = {
     return await axiosClient.get(url);
   },
 
-  getRatingByMovieId: async (id) => {
-    const url = `movies/rating/${id}`;
-    return await axiosClient.get(url);
-  },
-
   setRatingMovie: async (data) => {
     const url = `movies/rating`;
     return await axiosClient.post(url, data);
