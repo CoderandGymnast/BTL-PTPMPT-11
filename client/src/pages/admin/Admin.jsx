@@ -8,8 +8,10 @@ import {
 import InsertDriveFileTwoToneIcon from '@material-ui/icons/InsertDriveFileTwoTone';
 import { useState } from 'react';
 import { DropzoneDialog } from 'material-ui-dropzone';
-import './admin.scss';
 import { Alert } from '@material-ui/lab';
+import axios from 'axios';
+import './admin.scss';
+import bg from '../../assets/images/footer-bg.jpg';
 
 const CircularProgressWithLabel = (props) => {
   return (
@@ -53,9 +55,45 @@ const Admin = () => {
 
   const handleCLick = async (type, file) => {
     try {
+      switch (type) {
+        case 'sql':
+          const { data: sqlRes } = await axios.get(
+            'http://localhost:5000/load'
+          );
+          console.log(sqlRes);
+          setMsbSB('Load table rating to Sqoop done!!');
+          break;
+        case 'csv':
+          if (file) {
+            const { data: csvRes } = await axios.post(
+              'http://localhost:5000/upload',
+              file[0],
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              }
+            );
+            console.log(csvRes);
+            // const formData = new FormData();
+            // formData.append('file', file[0]);
+            // console.log(formData);
+            setMsbSB(`Load csv file: ${file[0].name} to Sqoop done!!`);
+          }
+          break;
+        case 'training':
+          const { data: resultTrain } = await axios.get(
+            'http://localhost:5000/train'
+          );
+          console.log(resultTrain);
+          setResult(resultTrain);
+          setMsbSB('Traning Done!!');
+          break;
+        default:
+          throw new Error('type not found');
+      }
+
       setTypeSB('success');
-      setMsbSB('Done ' + type);
-      console.log(file);
     } catch (error) {
       console.log(error);
       setMsbSB('Something Wrong !!!');
@@ -65,6 +103,7 @@ const Admin = () => {
   };
 
   return (
+    // <div className='admin_wrapper' style={{ backgroundImage: `url(${bg})` }}>
     <div className='admin_wrapper'>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -88,7 +127,7 @@ const Admin = () => {
             <Button
               variant='contained'
               color='primary'
-              onClick={() => handleCLick('file')}
+              onClick={() => handleCLick('sql')}
             >
               từ SQL
             </Button>
