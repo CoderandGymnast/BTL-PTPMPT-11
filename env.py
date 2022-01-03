@@ -1,0 +1,2 @@
+HDFS_HOST="nn"
+HDFS_PORT="9870"

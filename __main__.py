@@ -1,10 +1,13 @@
 from flask import Flask
 from flask import request
 from model import Model
+from hdfsclient import HDFSClient 
+from env import HDFS_HOST,HDFS_PORT
 
 app = Flask(__name__)
 
 model= None
+hdfsClient = HDFSClient(HDFS_HOST,HDFS_PORT)
 
 @app.route('/get_recommendations', methods=['GET', 'POST'])
 def get_recommendations():
@@ -20,7 +23,9 @@ def get_recommendations():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     f = request.files['file']
-    f.save(f.filename)
+    path=request.form["path"]
+    hdfsClient.write(f"{path}/{f.filename}",f.read()) 
+
     return ""
        
 
