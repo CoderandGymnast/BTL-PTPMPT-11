@@ -2,9 +2,10 @@ from flask import Flask
 from flask import request
 from model import Model
 from HDFSClient import HDFSClient 
-from env import HDFS_HOST,HDFS_PORT
+from env import HDFS_HOST,HDFS_PORT,HDFS_PATH_DS_CSV
 from SQLClient import SQLClient
 
+import random
 
 app = Flask(__name__)
 
@@ -12,8 +13,8 @@ model= None
 hdfsClient = HDFSClient(HDFS_HOST,HDFS_PORT)
 sqlClient=SQLClient(hdfsClient)
 
-@app.route('/get_recommendations', methods=['GET', 'POST'])
-def get_recommendations():
+@app.route('/get_recs', methods=['GET', 'POST'])
+def get_recs():
     user_id=request.args.get("user_id")
     num_movies=request.args.get("num_movies")
     res=model.get_recs(user_id,num_movies)
@@ -22,8 +23,12 @@ def get_recommendations():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     f = request.files['file']
-    path=request.form["path"]
-    hdfsClient.write(f"{path}/{f.filename}",f.read()) 
+    ds_type=request.form["type"]
+    if not ((ds_type=="movies") or (ds_type=="ratings")):
+        return "[ERROR]: invalid dataset type"
+    path=f"{HDFS_PATH_DS_CSV}/{ds_type}"
+    filename=str(random.random())[2:]
+    hdfsClient.write(f"{path}/{filename}.csv",f.read()) 
 
     return ""
 
@@ -34,8 +39,8 @@ def train():
     res=model.train() 
     return f"{res}" 
 
-@app.route('/load', methods=['GET', 'POST'])
-def load():
+@app.route('/load_model', methods=['GET', 'POST'])
+def load_model():
     global model
     if not model: # first load.
         model=Model()
@@ -45,7 +50,13 @@ def load():
 
 @app.route('/sync_sql', methods=['GET', 'POST'])
 def sync_sql():
-    sqlClient.load_ratings()
+    sqlClient.sync_ratings()
+    sqlClient.sync_movies()
+    return "" 
+
+@app.route('/clean_ds_csv', methods=['GET', 'POST'])
+def clean_ds_csv():
+    hdfsClient.clean_ds_csv() 
     return "" 
 
 if __name__ == '__main__':

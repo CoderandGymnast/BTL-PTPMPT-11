@@ -2,16 +2,16 @@ from pyspark.ml.recommendation import ALS,ALSModel
 from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
+from env import SPARK_URL,HDFS_URL_BASE
+
 import pyspark.sql.functions as sf
 
-URL_SPARK_MASTER="spark://192.168.56.101:7000"
-PATH_BASE_000="hdfs://nn:9001/ds000/csv"
 
 class Model:
     def __init__(self):
         self.ss= SparkSession.builder\
         .appName("Movie Recommender 000")\
-        .master(URL_SPARK_MASTER)\
+        .master(SPARK_URL)\
         .getOrCreate()
 
         self.load_model()
@@ -34,14 +34,14 @@ class Model:
         self.model=ALSModel.load("model")
 
     def load_movies(self):
-        self.movies=self.ss.read.csv(f"{PATH_BASE_000}/movies/*.csv", header=True)
+        self.movies=self.ss.read.csv(f"{HDFS_URL_BASE}/movies/*.csv", header=True)
         self.movies.\
             withColumn('movieId', col('movieId').cast('integer')).\
             drop('title').\
             drop('genres')
 
     def load_ratings(self):
-        self.ratings=self.ss.read.csv(f"{PATH_BASE_000}/ratings/*.csv", header=True)
+        self.ratings=self.ss.read.csv(f"{HDFS_URL_BASE}/ratings/*.csv", header=True)
         self.ratings = self.ratings.\
             withColumn('userId', col('userId').cast('integer')).\
             withColumn('movieId', col('movieId').cast('integer')).\
@@ -65,4 +65,5 @@ class Model:
         evaluator = RegressionEvaluator(metricName="rmse", labelCol="rating",
                                 predictionCol="prediction")
         rmse = evaluator.evaluate(predictions)
+        self.load_model()
         return rmse
