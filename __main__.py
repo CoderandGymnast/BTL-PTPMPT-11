@@ -40,10 +40,11 @@ def train():
     return f"{res}" 
 
 @app.route('/init', methods=['GET', 'POST'])
-def load_model():
+def init():
     global model
     if not model: # first load.
         model=Model()
+        hdfsClient.init()
     else: # reload.
         return "[WARNING]: system already inited"
     return "" 

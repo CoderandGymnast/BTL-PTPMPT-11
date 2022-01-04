@@ -14,10 +14,6 @@ class Model:
         .master(SPARK_URL)\
         .getOrCreate()
 
-        self.load_movies()
-
-
-
     def get_recs(self,user_id,num_movies):
         user_recs= self.movies.limit(int(num_movies)).select("movieId").withColumn("userId", sf.lit(user_id))
 

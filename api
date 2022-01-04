@@ -1,8 +1,8 @@
-(1) Store MovieLens data to HDFS.
+curl -X GET "http://localhost:5000/init"
+curl -X GET "http://localhost:5000/init"
 
-(2) 
-curl -X GET "http://localhost:5000/init"
-curl -X GET "http://localhost:5000/init"
+Store MovieLens data to HDFS.
+
 curl -X GET "http://localhost:5000/train"
 curl -X GET "http://localhost:5000/get_recs?user_id=1&num_movies=100"
 curl -X GET "http://localhost:5000/get_recs?user_id=1&num_movies=1000"
