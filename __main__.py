@@ -39,13 +39,13 @@ def train():
     res=model.train() 
     return f"{res}" 
 
-@app.route('/load_model', methods=['GET', 'POST'])
+@app.route('/init', methods=['GET', 'POST'])
 def load_model():
     global model
     if not model: # first load.
         model=Model()
     else: # reload.
-        model.load_model()
+        return "[WARNING]: system already inited"
     return "" 
 
 @app.route('/sync_sql', methods=['GET', 'POST'])

@@ -14,7 +14,6 @@ class Model:
         .master(SPARK_URL)\
         .getOrCreate()
 
-        self.load_model()
         self.load_movies()
 
 

@@ -9,6 +9,10 @@ class HDFSClient:
         print(data)
         self.client.write(path,data=data)
 
+    def init(self):
+        self.client.makedirs(HDFS_PATH_DS_RATINGS)
+        self.client.makedirs(HDFS_PATH_DS_MOVIES)
+
     def clean_ds_csv(self):
         self.client.delete(HDFS_PATH_DS_MOVIES,recursive=True)
         self.client.makedirs(HDFS_PATH_DS_MOVIES)
