@@ -35,6 +35,8 @@ class Model:
 
     def load_movies(self):
         self.movies=self.ss.read.csv(f"{HDFS_URL_BASE}/movies/*.csv", header=True)
+        self.movies=self.movies.dropDuplicates()
+        print(f"movie count: {self.movies.count()}")
         self.movies.\
             withColumn('movieId', col('movieId').cast('integer')).\
             drop('title').\
@@ -42,6 +44,7 @@ class Model:
 
     def load_ratings(self):
         self.ratings=self.ss.read.csv(f"{HDFS_URL_BASE}/ratings/*.csv", header=True)
+        self.ratings=self.ratings.dropDuplicates()
         self.ratings = self.ratings.\
             withColumn('userId', col('userId').cast('integer')).\
             withColumn('movieId', col('movieId').cast('integer')).\

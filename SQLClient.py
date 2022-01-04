@@ -1,3 +1,4 @@
+import shutil
 import mysql.connector
 import pandas as pd
 import random
@@ -26,7 +27,7 @@ class SQLClient:
 
         name=str(random.random())[2:]
 
-        status=os.path.isdir("tmp")
+        status=os.path.isdir(SQL_PATH_BASE)
         if not status:
           os.mkdir(SQL_PATH_BASE)
 
@@ -34,6 +35,7 @@ class SQLClient:
         with open(f"{SQL_PATH_BASE}/{name}.csv","rb") as out:
             f=out.read()
             self.hdfsClient.write(f"{HDFS_PATH_DS_RATINGS}/{name}.csv",f)
+            shutil.rmtree(SQL_PATH_BASE)
     
     def sync_movies(self):
         cursor=self.sql.cursor() 
@@ -44,7 +46,7 @@ class SQLClient:
 
         name=str(random.random())[2:]
 
-        status=os.path.isdir("tmp")
+        status=os.path.isdir(SQL_PATH_BASE)
         if not status:
           os.mkdir(SQL_PATH_BASE)
 
@@ -52,3 +54,4 @@ class SQLClient:
         with open(f"{SQL_PATH_BASE}/{name}.csv","rb") as out:
             f=out.read()
             self.hdfsClient.write(f"{HDFS_PATH_DS_MOVIES}/{name}.csv",f)
+            shutil.rmtree(SQL_PATH_BASE)
