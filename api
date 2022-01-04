@@ -1,9 +1,13 @@
-load data from csv.
+(1) Store MovieLens data to HDFS.
 
-curl -X GET "http://localhost:5000/load_model"
-curl -X GET "http://localhost:5000/load_model"
+(2) 
+curl -X GET "http://localhost:5000/init"
+curl -X GET "http://localhost:5000/init"
+curl -X GET "http://localhost:5000/train"
 curl -X GET "http://localhost:5000/get_recs?user_id=1&num_movies=100"
 curl -X GET "http://localhost:5000/get_recs?user_id=1&num_movies=1000"
 curl -X GET "http://localhost:5000/sync_sql"
 curl -X GET "http://localhost:5000/train"
-curl -X GET "http://localhost:5000/clean_ds_csv"curl -X GET "http://localhost:5000/get_recs?user_id=1&num_movies=100"
+curl -X GET "http://localhost:5000/get_recs?user_id=1&num_movies=100"
+curl -X GET "http://localhost:5000/get_recs?user_id=1&num_movies=1000"
+curl -X GET "http://localhost:5000/clean_ds_csv"

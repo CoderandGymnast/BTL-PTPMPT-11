@@ -3,7 +3,7 @@ from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
 from env import SPARK_URL,HDFS_URL_BASE
-
+import os
 import pyspark.sql.functions as sf
 
 
@@ -61,11 +61,10 @@ class Model:
 
 
         als = ALS(rank=9,regParam=0.15,maxIter=3,userCol="userId", itemCol="movieId", ratingCol="rating", coldStartStrategy="drop")
-        model = als.fit(training)
-        model.write().overwrite().save("model")
-        predictions = model.transform(testing)
+        self.model = als.fit(training)
+        self.model.write().overwrite().save("model")
+        predictions = self.model.transform(testing)
         evaluator = RegressionEvaluator(metricName="rmse", labelCol="rating",
                                 predictionCol="prediction")
         rmse = evaluator.evaluate(predictions)
-        self.load_model()
         return rmse
