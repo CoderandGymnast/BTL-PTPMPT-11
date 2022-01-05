@@ -8,7 +8,7 @@ from SQLClient import SQLClient
 import random
 
 app = Flask(__name__)
-
+app.config['WTF_CSRF_METHODS'] = [] 
 model= None
 hdfsClient = HDFSClient(HDFS_HOST,HDFS_PORT)
 sqlClient=SQLClient(hdfsClient)
