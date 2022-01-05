@@ -13,6 +13,7 @@ HDFS_PATH_DS_CSV=f"{HDFS_PATH_DS}/csv"
 HDFS_PATH_DS_RATINGS=f"{HDFS_PATH_DS}/csv/ratings"
 HDFS_PATH_DS_MOVIES=f"{HDFS_PATH_DS}/csv/movies"
 HDFS_PATH_IMAGES=f"{HDFS_PATH_DS}/images"
+HDFS_PATH_VIDEOS=f"{HDFS_PATH_DS}/videos"
 
 SQL_PATH_BASE="tmp" # NOTE: store data from SQL server temperarily"
 SQL_HOST="sql" # TODO: change this to the sql host of the website.

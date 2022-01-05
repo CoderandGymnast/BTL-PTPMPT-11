@@ -66,5 +66,11 @@ def save_image():
     name=hdfsClient.save_image(url)
     return name 
 
+@app.route('/save_video', methods=['GET', 'POST'])
+def save_video():
+    url=request.args.get("url")
+    name=hdfsClient.save_video(url)
+    return name 
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)

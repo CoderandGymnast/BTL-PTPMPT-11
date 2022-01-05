@@ -30,13 +30,18 @@ class HDFSClient:
         name=os.path.basename(a.path)  
         return name
 
-    def load_image_bytes(self,url):
+    def load_bytes_from_url(self,url):
         contents = urllib.request.urlopen(url).read()
         data = base64.b64encode(contents)
         return data
 
     def save_image(self,url):
-        data = self.load_image_bytes(url)
+        data = self.load_bytes_from_url(url)
         name=self.get_name(url) 
         self.write(f"{HDFS_PATH_IMAGES}/{name}",data=data)
         return name
+    
+    def save_video(self,url):
+        data = self.load_bytes_from_url(url)
+        name=self.get_name(url) 
+        self.write(f"{HDFS_PATH_VIDEOS}/{name}",data=data)

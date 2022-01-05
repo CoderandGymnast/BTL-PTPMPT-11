@@ -2,7 +2,7 @@ curl -X GET "http://localhost:5000/init"
 curl -X GET "http://localhost:5000/init"
 
 curl -X GET "http://localhost:5000/save_image?url=https://image.tmdb.org/t/p/original/6AdXwFTRTAzggD2QUTt5B7JFGKL.jpg"
-
+http://nn:9870/webhdfs/v1/ds/images/6AdXwFTRTAzggD2QUTt5B7JFGKL.jpg?op=OPEN
 
 Store MovieLens data to HDFS.
 
