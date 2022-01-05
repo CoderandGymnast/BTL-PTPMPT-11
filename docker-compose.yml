@@ -1,0 +1,43 @@
+version: "3.7"
+
+services:
+  nn:
+    image: hungict2407/custom-namenode:1.0.0
+    ports:
+      - 9870:9870
+    volumes:
+      - nn-data:/home/storage/hdfs/namenode
+
+    networks:
+            - recommender 
+
+  dn001:
+    image: hungict2407/custom-datanode:1.0.0
+    volumes:
+      - dn001-data:/home/storage/hdfs/datanode
+
+    networks:
+            - recommender 
+
+  mn:
+    image: hungict2407/custom-spark:1.0.0
+    command: sh -c "sbin/start-master.sh -h mn -p 7000 && sbin/start-worker.sh -p 7001 spark://mn:7000 && tail -f README.md"
+    ports:
+      - 8080:8080
+    networks:
+            - recommender 
+
+  ms:
+    image: hungict2407/model-server:1.0.0
+    ports:
+      - 5000:5000
+    networks:
+            - recommender 
+
+
+networks:
+    recommender:
+
+volumes:
+  nn-data:
+  dn001-data:
