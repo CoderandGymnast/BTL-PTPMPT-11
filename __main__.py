@@ -60,5 +60,11 @@ def clean_ds_csv():
     hdfsClient.clean_ds_csv() 
     return "" 
 
+@app.route('/save_image', methods=['GET', 'POST'])
+def save_image():
+    url=request.args.get("url")
+    name=hdfsClient.save_image(url)
+    return name 
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)

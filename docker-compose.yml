@@ -5,6 +5,7 @@ services:
     image: hungict2407/custom-namenode:1.0.0
     ports:
       - 9870:9870
+      - 9864:9864
     volumes:
       - nn-data:/home/storage/hdfs/namenode
 
@@ -31,6 +32,8 @@ services:
     image: hungict2407/model-server:1.0.0
     ports:
       - 5000:5000
+    volumes:
+      - .:/code
     networks:
             - recommender 
 
