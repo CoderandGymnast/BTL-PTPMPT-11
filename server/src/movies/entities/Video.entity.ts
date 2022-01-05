@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Movie } from './Movie.entity';
+import { MovieDetails } from './MovieDetails.entity';
 
 @Entity()
 export class Video {
@@ -17,6 +17,8 @@ export class Video {
   })
   videoPath: string;
 
-  @ManyToOne(() => Movie, (movie) => movie.videos, { onDelete: 'CASCADE' })
-  movie: Movie;
+  @ManyToOne(() => MovieDetails, (movie) => movie.videos, {
+    onDelete: 'CASCADE',
+  })
+  movie: MovieDetails;
 }

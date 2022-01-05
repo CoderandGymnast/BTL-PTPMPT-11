@@ -11,11 +11,11 @@ import { AuthModule } from './auth/auth.module';
       port: 3306,
       username: 'root',
       // for local
-      host: 'localhost',
-      password: '3112',
+      // host: 'localhost',
+      // password: '3112',
       // for docker
-      // host: 'database',
-      // password: 'root123',
+      host: 'sql',
+      password: '12345678',
       database: 'movies',
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,

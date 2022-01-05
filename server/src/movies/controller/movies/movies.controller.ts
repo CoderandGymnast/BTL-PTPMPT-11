@@ -19,7 +19,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateMovieDto } from 'src/movies/dtos/CreateMovie.dto';
 import { RateMovieDto } from 'src/movies/dtos/RateMovie.dto';
 import { Genre } from 'src/movies/entities/Genre.entity';
-import { Movie } from 'src/movies/entities/Movie.entity';
+import { MovieDetails } from 'src/movies/entities/MovieDetails.entity';
 import { MoviesService } from 'src/movies/services/movies/movies.service';
 
 @ApiTags('movies')
@@ -29,7 +29,7 @@ export class MoviesController {
 
   @Get()
   @ApiResponse({ status: 200, description: 'Find all movies' })
-  async getMovies(): Promise<Movie[]> {
+  async getMovies(): Promise<MovieDetails[]> {
     return await this.moviesService.getMovies();
   }
 
@@ -55,7 +55,7 @@ export class MoviesController {
 
   @Get('genres/:genre')
   @ApiResponse({ status: 200, description: 'Find movies by genre' })
-  async GetByGenre(@Param('genre') genre: string): Promise<Movie[]> {
+  async GetByGenre(@Param('genre') genre: string): Promise<MovieDetails[]> {
     return await this.moviesService.getMoviesByGenre(genre);
   }
 

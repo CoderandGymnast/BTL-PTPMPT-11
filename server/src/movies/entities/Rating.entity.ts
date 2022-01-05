@@ -1,23 +1,28 @@
 import { User } from 'src/users/entities/User.entity';
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
-import { Movie } from './Movie.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
+import { MovieDetails } from './MovieDetails.entity';
 
-@Entity()
+@Entity({ name: 'ratings' })
 export class Rating {
-  //   @CreateDateColumn({ type: 'timestamp' })
-  //   createdAt: Date;
-
-  //   @UpdateDateColumn({ type: 'timestamp' })
-  //   updatedAt: Date;
-
   @ManyToOne(() => User, (user) => user.ratings, { primary: true })
+  @JoinColumn({ name: 'userId' })
   public user: User;
 
-  @ManyToOne(() => Movie, (movie) => movie.ratings, { primary: true })
-  public movie: Movie;
+  @ManyToOne(() => MovieDetails, (movie) => movie.ratings, { primary: true })
+  @JoinColumn({ name: 'movieId' })
+  public movie: MovieDetails;
 
   @Column({
     default: 0,
   })
   rating: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  timestamp: Date;
 }

@@ -26,20 +26,32 @@
         // align-items: center;
 
         h2 {
+            font-size: 26px;
             margin: 10px 0 30px;
         }
 
         button {
             font-size: 17px;
+            height: 40px;
         }
 
         .importdata{
             padding-bottom: 40px;
-            margin: 20px 0;
+            margin-bottom: 20px;
             &__btn{
-                padding: 0 55px;
+                // padding: 0 55px;
                 display: flex;
-                justify-content: space-between;
+                align-items: center;
+                justify-content: space-around;
+                
+                .file{
+                    display: flex;
+                    align-items: center;
+
+                    &__btn{
+                        margin-right: 10px;
+                    }
+                }
             }
 
             border-bottom: 1px solid lightgray;
@@ -49,15 +61,12 @@
             // margin-bottom: 60px;
             display: flex;
             align-items: center;
-            justify-content: space-evenly;
+            justify-content: space-around;
             height: 60px;
             padding-bottom: 40px;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
             border-bottom: 1px solid lightgray;
 
-            button {
-                height: 40px;
-            }
             
             &__result{
                 span {
@@ -70,8 +79,19 @@
             }
         }
 
-        .link{
-            font-size: 16px;
+        .manager{
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            &__link {
+                width: 49%;
+                font-size: 17px;
+                font-weight: 600;
+            }
+        }
+
+        .clean{
+            font-size: 17px;
             font-weight: 600;
             margin-bottom: 20px;
         }

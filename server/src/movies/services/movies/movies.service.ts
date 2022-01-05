@@ -4,22 +4,18 @@ import { CreateMovieDto } from 'src/movies/dtos/CreateMovie.dto';
 import { RateMovieDto } from 'src/movies/dtos/RateMovie.dto';
 import { Cast } from 'src/movies/entities/Cast.entity';
 import { Genre } from 'src/movies/entities/Genre.entity';
-import { Movie } from 'src/movies/entities/Movie.entity';
+import { MovieDetails } from 'src/movies/entities/MovieDetails.entity';
 import { Rating } from 'src/movies/entities/Rating.entity';
 import { Video } from 'src/movies/entities/Video.entity';
 import { User } from 'src/users/entities/User.entity';
 import { getConnection, Like, Repository } from 'typeorm';
 import axios from 'axios';
-
-const randomList = (length, List) => {
-  for (let i = 0; i < length; i++) {
-    List.push(Math.floor(Math.random() * length) + 1);
-  }
-};
-
+import { Movie } from 'src/movies/entities/Movie.entity';
 @Injectable()
 export class MoviesService {
   constructor(
+    @InjectRepository(MovieDetails)
+    private readonly movieDetailRepository: Repository<MovieDetails>,
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
     @InjectRepository(Genre)
@@ -36,30 +32,33 @@ export class MoviesService {
 
   listMovie = [];
 
-  async getMovies(): Promise<Movie[]> {
-    return await this.movieRepository.find();
+  async getMovies(): Promise<MovieDetails[]> {
+    return await this.movieDetailRepository.find();
   }
 
   async getGenres(user: any): Promise<Genre[]> {
     const { userId } = user;
-    const numMovie = 100;
+    const numMovie = 200;
     this.listMovie = [];
 
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/get_recommendations?user_id=${userId}&num_movies=${numMovie}`,
+        `http://ms:5000/get_recs?user_id=${userId}&num_movies=${numMovie}`,
       );
+      if (isNaN(data[0])) {
+        throw new Error('data must be string of number');
+      }
       this.listMovie = data;
-      console.log(data);
+      console.log('done');
     } catch (error) {
-      console.error('error');
+      console.error(error);
     }
     return await this.genreRepository.find();
   }
 
   async getMovieById(id: number, user: any) {
     const { userId } = user;
-    let Movie = await this.movieRepository
+    let Movie = await this.movieDetailRepository
       .createQueryBuilder('movie')
       .leftJoinAndSelect('movie.videos', 'video')
       .leftJoinAndSelect('movie.casts', 'cast')
@@ -71,7 +70,7 @@ export class MoviesService {
       .getOne();
 
     if (!Movie) {
-      Movie = await this.movieRepository.findOne(
+      Movie = await this.movieDetailRepository.findOne(
         { id },
         { relations: ['genres', 'casts', 'videos'] },
       );
@@ -82,12 +81,15 @@ export class MoviesService {
     return Movie;
   }
 
-  async getMovieByTitle(title: string, limit?: number): Promise<Movie[]> {
+  async getMovieByTitle(
+    title: string,
+    limit?: number,
+  ): Promise<MovieDetails[]> {
     if (!title) {
       return [];
     }
 
-    const movies = await this.movieRepository.find({
+    const movies = await this.movieDetailRepository.find({
       select: ['id', 'title', 'posterPath'],
       where: {
         title: Like(`%${title}%`),
@@ -98,9 +100,9 @@ export class MoviesService {
     return movies;
   }
 
-  async getMoviesByGenre(genre: string): Promise<Movie[]> {
+  async getMoviesByGenre(genre: string): Promise<MovieDetails[]> {
     const movies = await getConnection()
-      .getRepository(Movie)
+      .getRepository(MovieDetails)
       .createQueryBuilder('movie')
       .leftJoinAndSelect('movie.genres', 'genre')
       .where('genre.name = :genre', { genre })
@@ -124,7 +126,7 @@ export class MoviesService {
   }
 
   async createMovie(createMovieDto: CreateMovieDto) {
-    const checkMovie = await this.movieRepository.findOne({
+    const checkMovie = await this.movieDetailRepository.findOne({
       title: createMovieDto.title,
     });
 
@@ -132,7 +134,7 @@ export class MoviesService {
       return 'movie already exist';
     }
 
-    const newMovie = this.movieRepository.create({
+    const newMovieDetails = this.movieDetailRepository.create({
       title: createMovieDto.title,
       description: createMovieDto.description,
       runtime: createMovieDto.runtime,
@@ -152,7 +154,7 @@ export class MoviesService {
       casts.push(newCast);
     }
 
-    newMovie.casts = casts;
+    newMovieDetails.casts = casts;
 
     const videos = [];
 
@@ -166,10 +168,12 @@ export class MoviesService {
       videos.push(newVideo);
     }
 
-    newMovie.videos = videos;
-    await this.movieRepository.save(newMovie);
+    newMovieDetails.videos = videos;
+    await this.movieDetailRepository.save(newMovieDetails);
 
+    const genres = [];
     for (const genre of createMovieDto.genres) {
+      genres.push(genre);
       const checkGenre = await this.genreRepository.findOne({
         name: genre,
       });
@@ -181,12 +185,21 @@ export class MoviesService {
           .createQueryBuilder()
           .relation(Genre, 'movies')
           .of(checkGenre)
-          .add(newMovie);
+          .add(newMovieDetails);
       } else {
-        newGenre.movies = [newMovie];
+        newGenre.movies = [newMovieDetails];
         await this.genreRepository.save(newGenre);
       }
     }
+    const strGenres = genres.join('|');
+    const newMovie = this.movieRepository.create({
+      title: createMovieDto.title,
+      genres: strGenres,
+    });
+
+    newMovie.movieDetails = newMovieDetails;
+
+    await this.movieRepository.save(newMovie);
 
     return 'done';
   }
@@ -195,7 +208,9 @@ export class MoviesService {
     const { movie: movieId, rating } = rateMovieDto;
     const { userId } = user;
 
-    const checkMovie = await this.movieRepository.findOne({ id: movieId });
+    const checkMovie = await this.movieDetailRepository.findOne({
+      id: movieId,
+    });
     if (!checkMovie) return null;
 
     const checkUser = await this.userRepository.findOne({ id: userId });
@@ -214,13 +229,13 @@ export class MoviesService {
   }
 
   async deleteMovie(id: number) {
-    const movie = await this.movieRepository.findOne({ id });
+    const movie = await this.movieDetailRepository.findOne({ id });
 
     if (!id) {
       return 'movie is not exist';
     }
 
-    await this.movieRepository.remove(movie);
+    await this.movieDetailRepository.remove(movie);
 
     return 'done';
   }
