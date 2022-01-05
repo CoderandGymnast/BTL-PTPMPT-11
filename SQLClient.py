@@ -55,3 +55,4 @@ class SQLClient:
             f=out.read()
             self.hdfsClient.write(f"{HDFS_PATH_DS_MOVIES}/{name}.csv",f)
             shutil.rmtree(SQL_PATH_BASE)
+

@@ -45,3 +45,6 @@ class HDFSClient:
         data = self.load_bytes_from_url(url)
         name=self.get_name(url) 
         self.write(f"{HDFS_PATH_VIDEOS}/{name}",data=data)
+
+    def download_ds_csv(self):
+        self.client.download("/ds/csv",".")
