@@ -17,7 +17,7 @@ services:
       - recommender
       
   server:
-    build: ./server
+    # build: ./server
     image: hungdz3112/web-server:1.0.0
     restart: always
     ports:
@@ -28,7 +28,7 @@ services:
       - sql
 
   client:
-    build: ./client
+    # build: ./client
     image: hungdz3112/web-client:1.0.0
     ports:
       - "3000:3000"
