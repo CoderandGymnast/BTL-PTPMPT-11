@@ -46,7 +46,7 @@ const CircularProgressWithLabel = (props) => {
 const Admin = () => {
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [openSB, setOpenSB] = useState(false);
   const [msgSB, setMsbSB] = useState('hehe');
@@ -62,6 +62,8 @@ const Admin = () => {
       } catch (error) {
         console.log(error);
       }
+
+      setLoading(false);
     };
 
     fetchData();
@@ -239,6 +241,7 @@ const Admin = () => {
         <Button
           variant='outlined'
           color='secondary'
+          disabled={loading}
           onClick={() => handleCLick('clean')}
           target='_blank'
           className='clean'

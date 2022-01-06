@@ -31,6 +31,7 @@ export class MoviesService {
   ) {}
 
   listMovie = [];
+  numMovie = 200;
 
   async getMovies(): Promise<MovieDetails[]> {
     return await this.movieDetailRepository.find();
@@ -38,12 +39,11 @@ export class MoviesService {
 
   async getGenres(user: any): Promise<Genre[]> {
     const { userId } = user;
-    const numMovie = 200;
     this.listMovie = [];
 
     try {
       const { data } = await axios.get(
-        `http://ms:5000/get_recs?user_id=${userId}&num_movies=${numMovie}`,
+        `http://ms:5000/get_recs?user_id=${userId}&num_movies=${this.numMovie}`,
       );
       if (isNaN(data[0])) {
         throw new Error('data must be string of number');
@@ -101,26 +101,39 @@ export class MoviesService {
   }
 
   async getMoviesByGenre(genre: string): Promise<MovieDetails[]> {
+    if (this.listMovie.length > 0) {
+      const movies = await getConnection()
+        .getRepository(MovieDetails)
+        .createQueryBuilder('movie')
+        .leftJoinAndSelect('movie.genres', 'genre')
+        .where('genre.name = :genre', { genre })
+        .andWhere('movie.id IN (:...listMovie)', { listMovie: this.listMovie })
+        .getMany();
+
+      if (!movies) return null;
+
+      return movies;
+    }
+
     const movies = await getConnection()
       .getRepository(MovieDetails)
       .createQueryBuilder('movie')
       .leftJoinAndSelect('movie.genres', 'genre')
       .where('genre.name = :genre', { genre })
-      // .take(30)
+      .take(this.numMovie)
       .getMany();
 
     if (!movies) return null;
 
-    const newList = [];
+    // const newList = [];
+    // if (this.listMovie.length > 0) {
+    //   for (const id of this.listMovie) {
+    //     const findMovie = movies.find((movie) => movie.id == id);
 
-    if (this.listMovie.length > 0) {
-      for (const id of this.listMovie) {
-        const findMovie = movies.find((movie) => movie.id == id);
-
-        if (findMovie) newList.push(findMovie);
-      }
-      return newList;
-    }
+    //     if (findMovie) newList.push(findMovie);
+    //   }
+    //   return newList;
+    // }
 
     return movies;
   }
