@@ -43,7 +43,7 @@ export class MoviesService {
 
     try {
       const { data } = await axios.get(
-        `http://ms:5000/get_recs?user_id=${userId}&num_movies=${this.numMovie}`,
+        `http://ms:5002/get_recs?user_id=${userId}&num_movies=${this.numMovie}`,
       );
       if (isNaN(data[0])) {
         throw new Error('data must be string of number');

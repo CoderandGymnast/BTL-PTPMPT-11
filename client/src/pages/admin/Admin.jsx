@@ -51,7 +51,7 @@ const Admin = () => {
   const [msgSB, setMsbSB] = useState('hehe');
   const [typeSB, setTypeSB] = useState('success');
   const [typeFile, setTypeFile] = useState('');
-  const baseUrl = 'http://localhost:5000';
+  const baseUrl = 'http://localhost:5002';
 
   const getResult = (str) => {
     const x = str.slice(str.indexOf('E:') + 2).trim();
