@@ -1,6 +1,6 @@
 import './login.scss';
 import { Button, Snackbar } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { Alert } from '@material-ui/lab';
 
@@ -18,6 +18,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { dispatch } = useContext(AuthContext);
+  const history = useHistory();
 
   const [open, setOpen] = useState(false);
 
@@ -38,8 +39,11 @@ const Login = () => {
 
     dispatch(loginStart());
     try {
-      const res = await userApi.login(data);
-      dispatch(loginSuccess(res.data));
+      const { data: payload } = await userApi.login(data);
+      dispatch(loginSuccess(payload));
+
+      localStorage.setItem('token', JSON.stringify(payload.access_token));
+      history.go(0);
     } catch (err) {
       setOpen(true);
       dispatch(loginFailure());

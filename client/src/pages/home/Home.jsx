@@ -17,8 +17,9 @@ const Home = () => {
         setListGenres(res.data);
       }
     };
-
-    getData(genreApi.getAll, callback);
+    setTimeout(() => {
+      getData(genreApi.getAll, callback);
+    }, 400);
   }, []);
 
   return (

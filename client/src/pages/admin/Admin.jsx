@@ -1,14 +1,14 @@
 import {
   Box,
-  Button,
   CircularProgress,
+  Typography,
+  Button,
   FormControl,
   FormHelperText,
   InputLabel,
   MenuItem,
   Select,
   Snackbar,
-  Typography,
 } from '@material-ui/core';
 import InsertDriveFileTwoToneIcon from '@material-ui/icons/InsertDriveFileTwoTone';
 import { useState } from 'react';
@@ -17,7 +17,6 @@ import { Alert } from '@material-ui/lab';
 import axios from 'axios';
 import './admin.scss';
 import { useEffect } from 'react';
-// import bg from '../../assets/images/footer-bg.jpg';
 
 const CircularProgressWithLabel = (props) => {
   return (
@@ -45,7 +44,7 @@ const CircularProgressWithLabel = (props) => {
 
 const Admin = () => {
   const [open, setOpen] = useState(false);
-  const [result, setResult] = useState(0);
+  const [result, setResult] = useState('');
   const [loading, setLoading] = useState(true);
 
   const [openSB, setOpenSB] = useState(false);
@@ -53,6 +52,12 @@ const Admin = () => {
   const [typeSB, setTypeSB] = useState('success');
   const [typeFile, setTypeFile] = useState('');
   const baseUrl = 'http://localhost:5000';
+
+  const getResult = (str) => {
+    const x = str.slice(str.indexOf('E:') + 2).trim();
+
+    return parseFloat(x).toFixed(2);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,44 +87,37 @@ const Admin = () => {
     try {
       switch (type) {
         case 'sql':
-          const { data: sqlRes } = await axios.get(baseUrl + '/sync_sql');
+          const sqlRes = await axios.get(baseUrl + '/sync_sql');
           console.log(sqlRes);
-          setMsbSB('Load table rating to Sqoop done!!');
+          setMsbSB('Thành Công!!');
           break;
         case 'csv':
           if (file) {
             const formData = new FormData();
             formData.append('file', file[0]);
             formData.append('type', typeFile);
-            const { data: csvRes } = await axios.post(
-              baseUrl + '/upload',
-              formData,
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
-              }
-            );
+            const csvRes = await axios.post(baseUrl + '/upload', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
             console.log(csvRes);
-            // for (var pair of formData.entries()) {
-            //   console.log(pair[0] + ', ' + pair[1]);
-            // }
             setTypeFile('');
-            setMsbSB(`Load csv file: ${file[0].name} to Sqoop done!!`);
+            setMsbSB(`Thêm file ${file[0].name} Thành Công!!!!`);
           }
           break;
         case 'training':
-          const { data: resultTrain } = await axios.get(baseUrl + '/train');
-          console.log(resultTrain.toFixed(2));
-          setResult(resultTrain);
-          setMsbSB('Traning Done!!');
+          const resultTraining = await axios.get(baseUrl + '/train');
+          console.log(resultTraining);
+          if (resultTraining) {
+            setResult(getResult(resultTraining));
+          }
+          setMsbSB('Traning Thành Công!!');
           break;
         case 'clean':
-          const { data: resultClean } = await axios.get(
-            baseUrl + '/clean_ds_csv'
-          );
+          const resultClean = await axios.get(baseUrl + '/clean_ds_csv');
           console.log(resultClean);
-          setMsbSB('clean ds csv done!!');
+          setMsbSB('Xóa DATASET Thành Công!!');
           break;
         default:
           throw new Error('type not found');
@@ -230,7 +228,7 @@ const Admin = () => {
             Training
           </Button>
           <div className='trainning__result'>
-            <span>Độ chính xác: </span>
+            <span>RMSE: </span>
             <CircularProgressWithLabel
               thickness={4}
               size='75px'
@@ -246,7 +244,7 @@ const Admin = () => {
           target='_blank'
           className='clean'
         >
-          Xóa dữ liệu CSV
+          XÓA DATASET
         </Button>
         <div className='manager'>
           <Button
