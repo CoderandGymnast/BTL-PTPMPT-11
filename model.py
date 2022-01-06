@@ -53,9 +53,12 @@ class Model:
 
         # splits: 
         (training, testing)= self.ratings.randomSplit([0.8, 0.2])
+        uc=self.ratings.select("userId").distinct().count()
+        
 
-
-
+        tc=training.count()
+        tec=testing.count()
+        return f"training: {tc} -testing: {tec} - user: {uc}"
         als = ALS(rank=9,regParam=0.15,maxIter=3,userCol="userId", itemCol="movieId", ratingCol="rating", coldStartStrategy="drop")
         self.model = als.fit(training)
         self.model.write().overwrite().save("model")

@@ -19,12 +19,19 @@ class HDFSClient:
         self.client.makedirs(HDFS_PATH_DS_MOVIES)
         self.client.makedirs(HDFS_PATH_IMAGES)
 
+        self.client.makedirs(HDFS_PATH_SQL_RATINGS)
+        self.client.makedirs(HDFS_PATH_SQL_MOVIES)
     def clean_ds_csv(self):
         self.client.delete(HDFS_PATH_DS_MOVIES,recursive=True)
         self.client.makedirs(HDFS_PATH_DS_MOVIES)
         self.client.delete(HDFS_PATH_DS_RATINGS,recursive=True)
         self.client.makedirs(HDFS_PATH_DS_RATINGS)
 
+    def clean_ds_sql(self):
+        self.client.delete(HDFS_PATH_SQL_MOVIES,recursive=True)
+        self.client.makedirs(HDFS_PATH_SQL_MOVIES)
+        self.client.delete(HDFS_PATH_SQL_RATINGS,recursive=True)
+        self.client.makedirs(HDFS_PATH_SQL_RATINGS)
     def get_name(self,url):
         a = urlparse(url)
         name=os.path.basename(a.path)  
@@ -47,4 +54,4 @@ class HDFSClient:
         self.write(f"{HDFS_PATH_VIDEOS}/{name}",data=data)
 
     def download_ds_csv(self):
-        self.client.download("/ds/csv",".")
+        self.client.download("/ds",".")

@@ -59,14 +59,14 @@ def init():
 @app.route('/sync_sql', methods=['GET', 'POST'])
 @cross_origin()
 def sync_sql():
-    sqlClient.sync_ratings()
-    sqlClient.sync_movies()
+    sqlClient.sync() 
     return "" 
 
 @app.route('/clean_ds_csv', methods=['GET', 'POST'])
 @cross_origin()
 def clean_ds_csv():
     hdfsClient.clean_ds_csv() 
+    hdfsClient.clean_ds_sql()
     return "" 
 
 @app.route('/save_image', methods=['GET', 'POST'])

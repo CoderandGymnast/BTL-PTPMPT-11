@@ -3,56 +3,60 @@ import mysql.connector
 import pandas as pd
 import random
 import os
-from env import SQL_HOST,SQL_USER,SQL_PASSWORD, SQL_PATH_BASE, HDFS_PATH_DS_RATINGS, HDFS_PATH_DS_MOVIES
+from env import *
+
 
 class SQLClient:
     def __init__(self,hdfsClient):
+        self.hdfsClient=hdfsClient
+
+    def connect(self):
         self.sql = mysql.connector.connect(
           host=SQL_HOST,
           user=SQL_USER,
           password=SQL_PASSWORD,
           database="movies"
         )
-        self.hdfsClient=hdfsClient
+
+    def close(self):
+        self.sql.close()
+
+
     def sync(self):
+        self.connect()
+        self.hdfsClient.clean_ds_sql()
+        os.mkdir(SQL_PATH_BASE)
+        self.sync_movies() 
         self.sync_ratings()
-        self.sync_movies()
+        shutil.rmtree(SQL_PATH_BASE)
 
     def sync_ratings(self):
         cursor=self.sql.cursor() 
         cursor.execute("SELECT * FROM ratings")
         res= cursor.fetchall()
-
-        data=pd.DataFrame(res, columns=['userId', 'movieId', 'rating',"timestamp"])
-
+        cursor.close()
+        data=pd.DataFrame(res, columns=['rating', 'timestamp', 'userId',"movieId"])
+        pd.set_option("display.max_rows", None, "display.max_columns", None)
         name=str(random.random())[2:]
-
-        status=os.path.isdir(SQL_PATH_BASE)
-        if not status:
-          os.mkdir(SQL_PATH_BASE)
 
         data.to_csv(f"{SQL_PATH_BASE}/{name}.csv")
         with open(f"{SQL_PATH_BASE}/{name}.csv","rb") as out:
             f=out.read()
-            self.hdfsClient.write(f"{HDFS_PATH_DS_RATINGS}/{name}.csv",f)
-            shutil.rmtree(SQL_PATH_BASE)
+            self.hdfsClient.write(f"{HDFS_PATH_SQL_RATINGS}/{name}.csv",f)
     
     def sync_movies(self):
         cursor=self.sql.cursor() 
         cursor.execute("SELECT * FROM movies")
         res= cursor.fetchall()
+        cursor.close()
 
-        data=pd.DataFrame(res, columns=['movieId', 'title', 'genres'])
+        data=pd.DataFrame(res, columns=['title', 'genres', 'movieId'])
 
         name=str(random.random())[2:]
 
-        status=os.path.isdir(SQL_PATH_BASE)
-        if not status:
-          os.mkdir(SQL_PATH_BASE)
 
         data.to_csv(f"{SQL_PATH_BASE}/{name}.csv")
         with open(f"{SQL_PATH_BASE}/{name}.csv","rb") as out:
             f=out.read()
-            self.hdfsClient.write(f"{HDFS_PATH_DS_MOVIES}/{name}.csv",f)
-            shutil.rmtree(SQL_PATH_BASE)
+            self.hdfsClient.write(f"{HDFS_PATH_SQL_MOVIES}/{name}.csv",f)
 
