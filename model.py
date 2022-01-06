@@ -2,10 +2,10 @@ from pyspark.ml.recommendation import ALS,ALSModel
 from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
-from env import SPARK_URL,HDFS_URL_BASE
+from env import *
 import os
 import pyspark.sql.functions as sf
-
+import pandas as pd
 
 class Model:
     def __init__(self):
@@ -29,17 +29,21 @@ class Model:
         self.model=ALSModel.load("model")
 
     def load_movies(self):
-        self.movies=self.ss.read.csv(f"{HDFS_URL_BASE}/movies/*.csv", header=True)
+        csv_movies=self.ss.read.csv(f"{HDFS_URL}/{HDFS_PATH_DS_MOVIES}/*.csv", header=True)
+        sql_movies=self.ss.read.csv(f"{HDFS_URL}/{HDFS_PATH_SQL_MOVIES}/*.csv", header=True)
+        self.movies=csv_movies.union(sql_movies)
         self.movies=self.movies.dropDuplicates()
-        print(f"movie count: {self.movies.count()}")
         self.movies.\
             withColumn('movieId', col('movieId').cast('integer')).\
             drop('title').\
             drop('genres')
 
     def load_ratings(self):
-        self.ratings=self.ss.read.csv(f"{HDFS_URL_BASE}/ratings/*.csv", header=True)
+        csv_ratings=self.ss.read.csv(f"{HDFS_URL}/{HDFS_PATH_DS_RATINGS}/*.csv", header=True)
+        sql_ratings=self.ss.read.csv(f"{HDFS_URL}/{HDFS_PATH_SQL_RATINGS}/*.csv", header=True)
+        self.ratings=csv_ratings.union(sql_ratings)
         self.ratings=self.ratings.dropDuplicates()
+
         self.ratings = self.ratings.\
             withColumn('userId', col('userId').cast('integer')).\
             withColumn('movieId', col('movieId').cast('integer')).\
@@ -58,7 +62,6 @@ class Model:
 
         tc=training.count()
         tec=testing.count()
-        return f"training: {tc} -testing: {tec} - user: {uc}"
         als = ALS(rank=9,regParam=0.15,maxIter=3,userCol="userId", itemCol="movieId", ratingCol="rating", coldStartStrategy="drop")
         self.model = als.fit(training)
         self.model.write().overwrite().save("model")
@@ -66,4 +69,4 @@ class Model:
         evaluator = RegressionEvaluator(metricName="rmse", labelCol="rating",
                                 predictionCol="prediction")
         rmse = evaluator.evaluate(predictions)
-        return rmse
+        return f"training: {tc} -testing: {tec} - user: {uc} - rmse: {rmse}"
