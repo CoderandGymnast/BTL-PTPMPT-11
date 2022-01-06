@@ -29,19 +29,35 @@ class Model:
         self.model=ALSModel.load("model")
 
     def load_movies(self):
-        csv_movies=self.ss.read.csv(f"{HDFS_URL}/{HDFS_PATH_DS_MOVIES}/*.csv", header=True)
+        csv_movies=None
+        try:
+            csv_movies=self.ss.read.csv(f"{HDFS_URL}/{HDFS_PATH_DS_MOVIES}/*.csv", header=True)
+            csv_movies=csv_movies[["movieId"]]
+        except:
+            print("[NOTI]: CSV is empty.")
         sql_movies=self.ss.read.csv(f"{HDFS_URL}/{HDFS_PATH_SQL_MOVIES}/*.csv", header=True)
-        self.movies=csv_movies.union(sql_movies)
+        sql_movies=sql_movies[["movieId"]]
+        if csv_movies:
+            self.movies=csv_movies.union(sql_movies)
+        else:
+            self.movies=sql_movies
         self.movies=self.movies.dropDuplicates()
         self.movies.\
-            withColumn('movieId', col('movieId').cast('integer')).\
-            drop('title').\
-            drop('genres')
+            withColumn('movieId', col('movieId').cast('integer'))
 
     def load_ratings(self):
-        csv_ratings=self.ss.read.csv(f"{HDFS_URL}/{HDFS_PATH_DS_RATINGS}/*.csv", header=True)
+        csv_ratings=None
+        try:
+            csv_ratings=self.ss.read.csv(f"{HDFS_URL}/{HDFS_PATH_DS_RATINGS}/*.csv", header=True)
+            csv_ratings=csv_ratings[["userId","movieId","rating"]]
+        except:
+            print("[NOTI]: CSV is empty.")
         sql_ratings=self.ss.read.csv(f"{HDFS_URL}/{HDFS_PATH_SQL_RATINGS}/*.csv", header=True)
-        self.ratings=csv_ratings.union(sql_ratings)
+        sql_ratings=sql_ratings[["userId","movieId","rating"]]
+        if csv_ratings:
+            self.ratings=csv_ratings.union(sql_ratings)
+        else:
+            self.ratings=sql_ratings
         self.ratings=self.ratings.dropDuplicates()
 
         self.ratings = self.ratings.\
@@ -58,7 +74,8 @@ class Model:
         # splits: 
         (training, testing)= self.ratings.randomSplit([0.8, 0.2])
         uc=self.ratings.select("userId").distinct().count()
-        
+        if uc == 1:
+            return "[ERROR]: number of users must > 1."
 
         tc=training.count()
         tec=testing.count()
@@ -69,4 +86,4 @@ class Model:
         evaluator = RegressionEvaluator(metricName="rmse", labelCol="rating",
                                 predictionCol="prediction")
         rmse = evaluator.evaluate(predictions)
-        return f"training: {tc} -testing: {tec} - user: {uc} - rmse: {rmse}"
+        return f"UC: {uc} - TC: {tc} - TEC: {tec} - E: {rmse}" 
