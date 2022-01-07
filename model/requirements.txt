@@ -1,0 +1,8 @@
+notebook
+pyspark
+pandas
+matplotlib
+hdfs
+flask
+hdfs
+mysql-connector-python
