@@ -16,7 +16,17 @@ services:
     volumes:
       - dn001-data:/home/storage/hdfs/datanode
     ports:
-      - 9864:9864
+      - 9865:9864
+
+    networks:
+            - recommender 
+
+  dn002:
+    image: hungict2407/custom-datanode:1.0.0
+    volumes:
+      - dn002-data:/home/storage/hdfs/datanode
+    ports:
+      - 9866:9864
 
     networks:
             - recommender 
@@ -29,8 +39,16 @@ services:
     networks:
             - recommender 
 
+  w001:
+    image: hungict2407/custom-spark:1.0.0
+    command: sh -c "sbin/start-worker.sh -p 7001 spark://mn:7000 && tail -f README.md"
+    networks:
+            - recommender 
+    depends_on:
+      - mn
+
   ms:
-    image: model-server:1.0.3
+    image: model-server:1.0.4
     ports:
       - 5000:5000
     volumes:
@@ -46,3 +64,4 @@ networks:
 volumes:
   nn-data:
   dn001-data:
+  dn002-data:

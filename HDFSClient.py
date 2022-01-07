@@ -12,7 +12,7 @@ class HDFSClient:
 
     def write(self,path,data):
         print(data)
-        self.client.write(path,data=data)
+        self.client.write(path,data=data,blocksize=HDFS_BLOCK_SIZE,replication=HDFS_REPLICATION)
 
     def init(self):
         self.client.makedirs(HDFS_PATH_DS_RATINGS)

@@ -17,6 +17,9 @@ HDFS_PATH_SQL_RATINGS=f"{HDFS_PATH_DS}/sql/ratings"
 HDFS_PATH_SQL_MOVIES=f"{HDFS_PATH_DS}/sql/movies"
 HDFS_PATH_IMAGES=f"{HDFS_PATH_DS}/images"
 HDFS_PATH_VIDEOS=f"{HDFS_PATH_DS}/videos"
+HDFS_BLOCK_SIZE=1048576
+HDFS_REPLICATION=4
+
 
 SQL_PATH_BASE="tmp" # NOTE: store data from SQL server temperarily"
 SQL_HOST="sql" # TODO: change this to the sql host of the website.
