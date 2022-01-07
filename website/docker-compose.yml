@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  sql:
+    image: mysql
+    restart: always
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_USER: hungvs
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_PASSWORD: 12345678
+      MYSQL_DATABASE: movies
+    ports:
+      - "3307:3306"
+    networks:
+      - recommender
+      
+  server:
+    # build: ./server
+    image: hungdz3112/web-server:1.0.2
+    restart: always
+    ports:
+      - "5001:5001"
+    networks:
+      - recommender
+    depends_on:
+      - sql
+
+  client:
+    # build: ./client
+    image: hungdz3112/web-client:1.0.5
+    ports:
+      - "3000:3000"
+    networks:
+      - recommender
+    depends_on:
+      - server
+
+volumes:
+  mysql-data:
+
+networks:
+    recommender:
