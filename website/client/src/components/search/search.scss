@@ -1,0 +1,99 @@
+.search-box{
+    position: relative;
+    margin-right: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+
+    .input-search{
+        outline: none;
+        opacity: 0;
+        border: solid 1px rgba(0, 0, 0, 0.6);
+        border-radius: 3px;
+        box-sizing: border-box;
+        padding: 6px 34px 6px 40px;
+        width: 0%;
+        font-size: 16px;
+        color: black;
+        transition: ease width 1s, ease opacity 1s;
+        float: right;
+    }
+
+    .btn-search{
+        position: absolute;
+        right: 0;
+        color: white;
+        cursor: pointer;
+        z-index: 10;
+        transition: ease transform 1s;
+        transition-delay: 50ms;
+    }
+
+    .btn-clear{
+        position: absolute;
+        color: black;
+        opacity: 0;
+        transition: ease opacity 1s;
+        z-index: 10;
+        right: 10px;
+        cursor: pointer;
+
+        &:hover{
+            color: rgb(245, 72, 72);
+        }
+    }
+
+    .list-movie{
+        display: none;
+        position: absolute;
+        top: 100%;
+        background-color: var(--main-color);
+        width: 100%;
+        border-radius: 0 0 3px 3px;
+        list-style: none;
+
+        .movie{
+            padding: 10px;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+
+            &:hover{
+                color: rgb(245, 72, 72);
+                background-color: #322f2f;
+            }
+
+            .img-movie{
+                width: 30px;
+            }
+
+            .title-movie{
+                margin-left: 10px;
+                font-size: 16px;
+                font-weight: 500;
+            }
+        }
+    }
+
+    &:hover, &:focus-within {
+        .input-search{
+            opacity: 1;
+            width: 100%;
+        }
+
+        .btn-search{
+            transform: translateX(-265px);
+            color: black;
+        }
+
+        .btn-clear{
+            opacity: 1;
+        }
+
+        .list-movie{
+            display: block;
+        }
+    }
+}
