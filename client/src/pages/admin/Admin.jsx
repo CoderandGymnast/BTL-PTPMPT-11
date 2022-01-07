@@ -1,6 +1,4 @@
 import {
-  Box,
-  CircularProgress,
   Typography,
   Button,
   FormControl,
@@ -18,30 +16,6 @@ import axios from 'axios';
 import './admin.scss';
 import { useEffect } from 'react';
 
-const CircularProgressWithLabel = (props) => {
-  return (
-    <Box position='relative' display='inline-flex'>
-      <CircularProgress variant='determinate' {...props} />
-      <Box
-        top={0}
-        left={0}
-        bottom={0}
-        right={0}
-        position='absolute'
-        display='flex'
-        alignItems='center'
-        justifyContent='center'
-      >
-        <Typography
-          variant='subtitle1'
-          component='div'
-          color='textSecondary'
-        >{`${props.value}%`}</Typography>
-      </Box>
-    </Box>
-  );
-};
-
 const Admin = () => {
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState('');
@@ -51,12 +25,12 @@ const Admin = () => {
   const [msgSB, setMsbSB] = useState('hehe');
   const [typeSB, setTypeSB] = useState('success');
   const [typeFile, setTypeFile] = useState('');
-  const baseUrl = 'http://localhost:5002';
+  const baseUrl = 'http://localhost:5000';
 
   const getResult = (str) => {
     const x = str.slice(str.indexOf('E:') + 2).trim();
 
-    return parseFloat(x).toFixed(2);
+    return parseFloat(x).toFixed(4);
   };
 
   useEffect(() => {
@@ -134,7 +108,6 @@ const Admin = () => {
   };
 
   return (
-    // <div className='admin_wrapper' style={{ backgroundImage: `url(${bg})` }}>
     <div className='admin_wrapper'>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -229,11 +202,9 @@ const Admin = () => {
           </Button>
           <div className='trainning__result'>
             <span>RMSE: </span>
-            <CircularProgressWithLabel
-              thickness={4}
-              size='75px'
-              value={result}
-            />
+            <Typography variant='h5' component='div' color='textSecondary'>
+              {result}
+            </Typography>
           </div>
         </div>
         <Button
