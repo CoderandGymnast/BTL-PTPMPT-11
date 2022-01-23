@@ -14,11 +14,18 @@ const ListItem = ({ movie, name }) => {
     return hours + ' hour ' + minutes + ' minutes';
   };
 
+  const getSrc = (url) => {
+    if (url.includes('original')) {
+      return url.replace('original', 'w400');
+    }
+    return url;
+  };
+
   return (
     <div className='listItem'>
       <Link to={`${movie.id}`}>
         <img
-          src={movie.backdropPath.replace('original', 'w400')}
+          src={getSrc(movie.backdropPath)}
           onError={() => console.log(movie.id)} //to check broken img from database
           alt='movie img not found'
         />

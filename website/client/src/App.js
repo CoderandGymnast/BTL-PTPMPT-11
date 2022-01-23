@@ -10,6 +10,7 @@ import Detail from './pages/detail/Detail';
 import { useContext } from 'react';
 import { AuthContext } from './authContext/AuthContext';
 import Admin from './pages/admin/Admin';
+import Create from './pages/create/Create';
 
 const App = () => {
   const { token } = useContext(AuthContext);
@@ -24,6 +25,9 @@ const App = () => {
         </Route>
         <Route exact path='/admin'>
           <Admin />
+        </Route>
+        <Route exact path='/create'>
+          <Create />
         </Route>
         <Route path='/'>
           {token ? (

@@ -18,7 +18,7 @@ services:
       
   server:
     # build: ./server
-    image: hungdz3112/web-server:1.0.2
+    image: hungdz3112/web-server:1.0.3
     restart: always
     ports:
       - "5001:5001"
@@ -29,7 +29,7 @@ services:
 
   client:
     # build: ./client
-    image: hungdz3112/web-client:1.0.5
+    image: hungdz3112/web-client:1.0.6
     ports:
       - "3000:3000"
     networks:

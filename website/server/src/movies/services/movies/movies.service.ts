@@ -101,41 +101,81 @@ export class MoviesService {
   }
 
   async getMoviesByGenre(genre: string): Promise<MovieDetails[]> {
-    if (this.listMovie.length > 0) {
-      const movies = await getConnection()
-        .getRepository(MovieDetails)
-        .createQueryBuilder('movie')
-        .leftJoinAndSelect('movie.genres', 'genre')
-        .where('genre.name = :genre', { genre })
-        .andWhere('movie.id IN (:...listMovie)', { listMovie: this.listMovie })
-        .getMany();
-
-      if (!movies) return null;
-
-      return movies;
-    }
-
+    const numMoviesTake = 60;
     const movies = await getConnection()
       .getRepository(MovieDetails)
       .createQueryBuilder('movie')
       .leftJoinAndSelect('movie.genres', 'genre')
       .where('genre.name = :genre', { genre })
-      .take(this.numMovie)
+      .orderBy('RAND()')
       .getMany();
 
     if (!movies) return null;
 
-    // const newList = [];
-    // if (this.listMovie.length > 0) {
-    //   for (const id of this.listMovie) {
-    //     const findMovie = movies.find((movie) => movie.id == id);
+    const newList = [];
 
-    //     if (findMovie) newList.push(findMovie);
-    //   }
-    //   return newList;
+    if (this.listMovie.length > 0) {
+      for (const id of this.listMovie) {
+        const findMovie = movies.find((movie) => movie.id == id);
+
+        if (findMovie) newList.push(findMovie);
+      }
+
+      if (newList.length < numMoviesTake) {
+        const randomMovies = await getConnection()
+          .getRepository(MovieDetails)
+          .createQueryBuilder('movie')
+          .leftJoinAndSelect('movie.genres', 'genre')
+          .where('genre.name = :genre', { genre })
+          .andWhere('movie.id NOT IN (:...listMovie)', {
+            listMovie: this.listMovie,
+          })
+          .orderBy('RAND()')
+          .take(numMoviesTake - newList.length)
+          .getMany();
+
+        newList.push(...randomMovies);
+      }
+
+      return newList;
+    }
+
+    return movies.slice(0,numMoviesTake);
+    // if (this.listMovie.length > 0) {
+    //   const movies = await getConnection()
+    //     .getRepository(MovieDetails)
+    //     .createQueryBuilder('movie')
+    //     .leftJoinAndSelect('movie.genres', 'genre')
+    //     .where('genre.name = :genre', { genre })
+    //     .andWhere('movie.id IN (:...listMovie)', { listMovie: this.listMovie })
+    //     .getMany();
+
+    //   if (!movies) return null;
+
+    //   return movies;
     // }
 
-    return movies;
+    // const movies = await getConnection()
+    //   .getRepository(MovieDetails)
+    //   .createQueryBuilder('movie')
+    //   .leftJoinAndSelect('movie.genres', 'genre')
+    //   .where('genre.name = :genre', { genre })
+    //   .take(this.numMovie)
+    //   .getMany();
+
+    // if (!movies) return null;
+
+    // // const newList = [];
+    // // if (this.listMovie.length > 0) {
+    // //   for (const id of this.listMovie) {
+    // //     const findMovie = movies.find((movie) => movie.id == id);
+
+    // //     if (findMovie) newList.push(findMovie);
+    // //   }
+    // //   return newList;
+    // // }
+
+    // return movies;
   }
 
   async createMovie(createMovieDto: CreateMovieDto) {
